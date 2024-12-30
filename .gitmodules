@@ -1,0 +1,3 @@
+[submodule "chessta-backend"]
+	path = chessta-backend
+	url = https://github.com/JustByNick/chessta-backend.git
