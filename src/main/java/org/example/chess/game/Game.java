@@ -1,21 +1,38 @@
 package org.example.chess.game;
 
-import org.example.chess.figure.Figure;
-import org.example.chess.figure.pieces.*;
-import org.example.chess.player.Player;
+import org.example.chess.database.GameRepository;
+import org.example.chess.figure.*;
 
 public class Game {
-    private final Player whitePlayer;
-    private final Player blackPlayer;
-    private final Figure[][] board;
+    private int id;
+    private Player whitePlayer;
+    private Player blackPlayer;
+    private Figure[][] board;
     private Player currentPlayer;
 
-    public Game(String nameWhite, String nameBlack) {
-        this.whitePlayer = new Player(nameWhite, true);
-        this.blackPlayer = new Player(nameBlack, false);
+    public Game(String whitePlayerName, String blackPlayerName) {
+        this.whitePlayer = new Player(whitePlayerName, true);
+        this.blackPlayer = new Player(blackPlayerName, false);
+        this.currentPlayer = this.whitePlayer;
         this.board = new Figure[8][8];
-        this.currentPlayer = whitePlayer;
         initializeBoard();
+    }
+
+    // Konstruktor für geladene Spiele
+    public Game(int id, Player whitePlayer, Player blackPlayer, Player currentPlayer, Figure[][] board) {
+        this.id = id;
+        this.whitePlayer = whitePlayer;
+        this.blackPlayer = blackPlayer;
+        this.currentPlayer = currentPlayer;
+        this.board = board;
+    }
+
+    public Game(int id, int whitePlayerId, int blackPlayerId, int currentPlayerId) {
+        this.id = id;
+        this.whitePlayer = null; // Später laden
+        this.blackPlayer = null; // Später laden
+        this.currentPlayer = null; // Später laden
+        this.board = new Figure[8][8]; // Leeres Brett
     }
 
     public void initializeBoard() {
@@ -54,11 +71,77 @@ public class Game {
     }
 
     public void switchTurn() {
-        currentPlayer = (currentPlayer == whitePlayer) ? blackPlayer : whitePlayer;
+        setCurrentPlayer((currentPlayer == whitePlayer) ? blackPlayer : whitePlayer);
+    }
+
+    public boolean isPositionOccupied(int row, int col) {
+        return board[row - 1][col - 1] != null;
+    }
+
+    public boolean isEnemyAtPosition(int row, int col, boolean isWhitePlayer) {
+        Figure figure = board[row - 1][col - 1];
+        return figure != null && figure.isWhite() != isWhitePlayer;
+    }
+
+    public boolean validateMove(int fromRow, int fromCol, int toRow, int toCol) {
+        Figure figure = getFigureAtPosition(fromRow, fromCol);
+
+        // Wenn keine Figur oder Figur des Gegners bewegt werden soll
+        if (figure == null || figure.isWhite() != currentPlayer.isWhite()) {
+            return false;
+        }
+
+        if (!figure.isValidMove(toRow, toCol)) {
+            return false;
+        }
+
+        // Prüfen, ob die Zielposition blockiert ist (eigene Figur)
+        Figure targetFigure = getFigureAtPosition(toRow, toCol);
+        if (targetFigure != null && targetFigure.isWhite() == currentPlayer.isWhite()) {
+            return false; // Eigene Figur blockiert den Zug
+        }
+
+        // ! Test, ob König ich Schach steht muss noch hinzugefügt werden
+        // if (wouldKingBeInCheck)
+
+        return true;
+    }
+
+    private void executeMove(int fromRow, int fromCol, int toRow, int toCol) {
+        Figure figure = getFigureAtPosition(fromRow, fromCol);
+        Figure targetFigure = getFigureAtPosition(toRow, toCol);
+
+        // Entferne geschlagene Figur
+        if (targetFigure != null) {
+            getOpponentPlayer().removePiece(targetFigure);
+        }
+
+        if(figure.move(toRow, toCol)) {
+            board[toRow - 1][toCol - 1] = figure;
+            board[fromRow - 1][fromCol - 1] = null;
+        }
+
+        switchTurn();
+    }
+
+    public boolean moveFigure(int fromRow, int fromCol, int toRow, int toCol) {
+        if (!validateMove(fromRow, fromCol, toRow, toCol)) {
+            return false;
+        }
+
+        executeMove(fromRow, fromCol, toRow, toCol);
+        return true;
+    }
+
+    public void saveToDatabase() {
+        GameRepository.saveGame(this);
     }
 
     // getter methoden
 
+    public int getId() {
+        return id;
+    }
     public Player getWhitePlayer() {
         return whitePlayer;
     }
@@ -68,4 +151,30 @@ public class Game {
     public Figure[][] getBoard() {
         return board;
     }
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+    public Figure getFigureAtPosition(int row, int col) {
+        return board[row - 1][col - 1];
+    }
+    public Player getOpponentPlayer() {
+        return (currentPlayer == whitePlayer) ? blackPlayer : whitePlayer;
+    }
+    public int getWhitePlayerId() {
+        return this.whitePlayer.getId(); }
+    public int getBlackPlayerId() {
+        return this.blackPlayer.getId(); }
+
+    public void setId(int id) {
+        this.id = id; }
+    public void setWhitePlayer(Player whitePlayer) {
+        this.whitePlayer = whitePlayer; }
+    public void setBlackPlayer(Player blackPlayer) {
+        this.blackPlayer = blackPlayer; }
+    public void setBoard(Figure[][] board) {
+        this.board = board; }
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
 }

@@ -1,14 +1,25 @@
-package org.example.chess.figure;
+package org.example.chess.game;
 
 public abstract class Figure {
+    private int id;
     private int row; // 1-8
     private int column; // a-h aber hier 1-8
     boolean isWhite;
+    boolean isCaptured;
 
     public Figure(int column, int row, boolean isWhite) {
         setColumn(column);
         setRow(row);
         setColor(isWhite);
+        isCaptured = false;
+    }
+
+    public Figure(int id, int column, int row, boolean isWhite, boolean isCaptured) {
+        this.id = id;
+        setColumn(column);
+        setRow(row);
+        setColor(isWhite);
+        this.isCaptured = isCaptured;
     }
 
     // methoden
@@ -45,8 +56,13 @@ public abstract class Figure {
         this.column = column;
     }
     public void setColor(boolean white) { this.isWhite = white; }
+    public void setCaptured() { this.isCaptured = true; }
+    public void unsetCaptured() { this.isCaptured = false; }
+    public void setId(int id) { this.id = id; }
 
+    public int getId() { return id; }
     public int getRow() { return row; }
     public int getColumn() { return column; }
     public boolean isWhite() { return isWhite; }
+    public boolean isCaptured() { return isCaptured; }
 }
