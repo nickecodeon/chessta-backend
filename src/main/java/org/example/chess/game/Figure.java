@@ -2,8 +2,8 @@ package org.example.chess.game;
 
 public abstract class Figure {
     private int id;
-    private int row; // 1-8
     private int column; // a-h aber hier 1-8
+    private int row; // 1-8
     boolean isWhite;
     boolean isCaptured;
 

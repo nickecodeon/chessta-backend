@@ -70,34 +70,34 @@ public class Game {
         }
     }
 
-    public void switchTurn() {
-        setCurrentPlayer((currentPlayer == whitePlayer) ? blackPlayer : whitePlayer);
-    }
-
-    public boolean isPositionOccupied(int row, int col) {
-        return board[row - 1][col - 1] != null;
-    }
-
-    public boolean isEnemyAtPosition(int row, int col, boolean isWhitePlayer) {
-        Figure figure = board[row - 1][col - 1];
-        return figure != null && figure.isWhite() != isWhitePlayer;
-    }
-
-    public boolean validateMove(int fromRow, int fromCol, int toRow, int toCol) {
-        Figure figure = getFigureAtPosition(fromRow, fromCol);
-
-        // Wenn keine Figur oder Figur des Gegners bewegt werden soll
-        if (figure == null || figure.isWhite() != currentPlayer.isWhite()) {
+    public boolean moveFigure(int fromCol, int fromRow, int toCol, int toRow) {
+        if (!validateMove(fromCol, fromRow, toCol, toRow)) {
             return false;
         }
 
-        if (!figure.isValidMove(toRow, toCol)) {
+        executeMove(fromCol, fromRow, toCol, toRow);
+        return true;
+    }
+
+    public boolean validateMove(int fromCol, int fromRow, int toCol, int toRow) {
+        Figure figure = getFigureAtPosition(fromCol, fromRow);
+        System.out.println("Figure: " + figure.getClass().getSimpleName());
+
+        // Wenn keine Figur oder Figur des Gegners bewegt werden soll
+        if (figure == null || figure.isWhite() != currentPlayer.isWhite()) {
+            System.out.println("Invalid Player");
+            return false;
+        }
+
+        if (!figure.isValidMove(toCol, toRow)) {
+            System.out.println("Invalid Move");
             return false;
         }
 
         // Prüfen, ob die Zielposition blockiert ist (eigene Figur)
-        Figure targetFigure = getFigureAtPosition(toRow, toCol);
+        Figure targetFigure = getFigureAtPosition(toCol, toRow);
         if (targetFigure != null && targetFigure.isWhite() == currentPlayer.isWhite()) {
+            System.out.println("Eigene Figur blockiert");
             return false; // Eigene Figur blockiert den Zug
         }
 
@@ -107,30 +107,34 @@ public class Game {
         return true;
     }
 
-    private void executeMove(int fromRow, int fromCol, int toRow, int toCol) {
-        Figure figure = getFigureAtPosition(fromRow, fromCol);
-        Figure targetFigure = getFigureAtPosition(toRow, toCol);
+    private void executeMove(int fromCol, int fromRow, int toCol, int toRow) {
+        Figure figure = getFigureAtPosition(fromCol, fromRow);
+        Figure targetFigure = getFigureAtPosition(toCol, toRow);
 
         // Entferne geschlagene Figur
         if (targetFigure != null) {
             getOpponentPlayer().removePiece(targetFigure);
         }
 
-        if(figure.move(toRow, toCol)) {
+        if(figure.move(toCol, toRow)) {
             board[toRow - 1][toCol - 1] = figure;
-            board[fromRow - 1][fromCol - 1] = null;
+            board[fromRow- 1][fromCol - 1] = null;
         }
 
         switchTurn();
     }
 
-    public boolean moveFigure(int fromRow, int fromCol, int toRow, int toCol) {
-        if (!validateMove(fromRow, fromCol, toRow, toCol)) {
-            return false;
-        }
+    public void switchTurn() {
+        setCurrentPlayer((currentPlayer == whitePlayer) ? blackPlayer : whitePlayer);
+    }
 
-        executeMove(fromRow, fromCol, toRow, toCol);
-        return true;
+    public boolean isPositionOccupied(int col, int row) {
+        return board[col - 1][row - 1] != null;
+    }
+
+    public boolean isEnemyAtPosition(int col, int row, boolean isWhitePlayer) {
+        Figure figure = board[row - 1][col - 1];
+        return figure != null && figure.isWhite() != isWhitePlayer;
     }
 
     public void saveToDatabase() {
@@ -154,7 +158,7 @@ public class Game {
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
-    public Figure getFigureAtPosition(int row, int col) {
+    public Figure getFigureAtPosition(int col, int row) {
         return board[row - 1][col - 1];
     }
     public Player getOpponentPlayer() {

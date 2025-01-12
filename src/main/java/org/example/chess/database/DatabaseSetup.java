@@ -33,8 +33,8 @@ public class DatabaseSetup {
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     type TEXT NOT NULL,
                     isWhite BOOLEAN NOT NULL,
-                    row INTEGER NOT NULL,
                     column INTEGER NOT NULL,
+                    row INTEGER NOT NULL,
                     isCaptured BOOLEAN NOT NULL,
                     gameId INTEGER NOT NULL,
                     FOREIGN KEY (gameId) REFERENCES Game(id) ON DELETE CASCADE

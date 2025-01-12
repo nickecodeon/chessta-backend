@@ -12,15 +12,22 @@ import java.util.ArrayList;
 public class GameRepository {
 
     public static void saveGame(Game game) {
+        String sql = "UPDATE Game SET currentPlayerId = ? WHERE id = ?";
         try (Connection conn = Database.connect()) {
+            // Spieler zuerst speichern, um ihre IDs zu setzen
+            savePlayers(conn, game);
+
             // Neues Spiel oder bestehendes Spiel aktualisieren
             if (game.getId() == 0) {
                 insertGame(conn, game); // Neues Spiel
             } else {
-                updateGame(conn, game); // Bestehendes Spiel aktualisieren
+                try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                    pstmt.setInt(1, game.getCurrentPlayer().getId());
+                    pstmt.setInt(2, game.getId());
+                    pstmt.executeUpdate();
+                }
             }
 
-            savePlayers(conn, game);
             saveFigures(conn, game);
 
             System.out.println("Spiel wurde erfolgreich gespeichert.");
@@ -39,17 +46,9 @@ public class GameRepository {
 
             ResultSet rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
-                game.setId(rs.getInt(1)); // Spiel-ID setzen
+                int generatedId = rs.getInt(1);
+                game.setId(generatedId);
             }
-        }
-    }
-
-    private static void updateGame(Connection conn, Game game) throws SQLException {
-        String sql = "UPDATE Game SET currentPlayerId = ? WHERE id = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, game.getCurrentPlayer().getId());
-            pstmt.setInt(2, game.getId());
-            pstmt.executeUpdate();
         }
     }
 
@@ -60,48 +59,112 @@ public class GameRepository {
 
     private static void savePlayer(Connection conn, Player player, int gameId) throws SQLException {
         String sql = """
-                INSERT INTO Player (id, name, isWhite, gameId)
-                VALUES (?, ?, ?, ?)
-                ON CONFLICT(id) DO UPDATE SET
-                    name = excluded.name,
-                    isWhite = excluded.isWhite,
-                    gameId = excluded.gameId
-                """;
+            UPDATE Player
+            SET name = ?, isWhite = ?, gameId = ?
+            WHERE id = ?
+            """;
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, player.getId());
-            pstmt.setString(2, player.getName());
-            pstmt.setBoolean(3, player.isWhite());
-            pstmt.setInt(4, gameId);
+        if (player.getId() == 0) {
+            // Spieler einfügen und ID setzen
+            insertPlayer(conn, player, gameId);
+        } else {
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                // Spieler updaten
+                pstmt.setString(1, player.getName());
+                pstmt.setBoolean(2, player.isWhite());
+                pstmt.setInt(3, gameId);
+                pstmt.setInt(4, player.getId());
+                pstmt.executeUpdate();
+            }
+        }
+    }
+
+    private static void insertPlayer(Connection conn, Player player, int gameId) throws SQLException {
+        String sql = """
+            INSERT INTO Player (name, isWhite, gameId)
+            VALUES (?, ?, ?)
+            """;
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, player.getName());
+            pstmt.setBoolean(2, player.isWhite());
+            pstmt.setInt(3, gameId);
             pstmt.executeUpdate();
+
+            // Generierte ID abrufen und dem Spieler zuweisen
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int generatedId = generatedKeys.getInt(1);
+                    player.setId(generatedId);
+                }
+            }
         }
     }
 
     private static void saveFigures(Connection conn, Game game) throws SQLException {
+        for (Figure[] row : game.getBoard()) {
+            for (Figure figure : row) {
+                saveFigure(conn, figure, game.getId());
+            }
+        }
+    }
+
+    public static void saveFigure(Connection conn, Figure figure, int gameId) throws SQLException {
         String sql = """
-                INSERT INTO Figure (id, type, isWhite, row, column, isCaptured, gameId)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                ON CONFLICT(id) DO UPDATE SET
-                    row = excluded.row,
-                    column = excluded.column,
-                    isCaptured = excluded.isCaptured
-                """;
+            INSERT INTO Figure (id, type, isWhite, column, row, isCaptured, gameId)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET
+                column = excluded.column,
+                row = excluded.row,
+                isCaptured = excluded.isCaptured
+            """;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            for (Figure[] row : game.getBoard()) {
-                for (Figure figure : row) {
-                    if (figure != null) {
-                        pstmt.setInt(1, figure.getId());
-                        pstmt.setString(2, figure.getClass().getSimpleName());
-                        pstmt.setBoolean(3, figure.isWhite());
-                        pstmt.setInt(4, figure.getRow());
-                        pstmt.setInt(5, figure.getColumn());
-                        pstmt.setBoolean(6, figure.isCaptured());
-                        pstmt.setInt(7, game.getId());
-                        pstmt.executeUpdate();
-                    }
+            if (figure != null) {
+                if (figure.getId() == 0) {
+                    // Falls keine ID, zuerst speichern und ID setzen
+                    insertFigure(conn, figure, gameId);
+                } else {
+                    // Falls ID vorhanden, aktualisiere die Figur
+                    pstmt.setInt(1, figure.getId());
+                    pstmt.setString(2, figure.getClass().getSimpleName());
+                    pstmt.setBoolean(3, figure.isWhite());
+                    pstmt.setInt(4, figure.getColumn());
+                    pstmt.setInt(5, figure.getRow());
+                    pstmt.setBoolean(6, figure.isCaptured());
+                    pstmt.setInt(7, gameId);
+                    pstmt.executeUpdate();
                 }
             }
+        } catch (SQLException e) {
+            System.err.println("Fehler beim Speichern der Figur: " + e.getMessage());
+        }
+    }
+
+    private static void insertFigure(Connection conn, Figure figure, int gameId) throws SQLException {
+        String sql = """
+            INSERT INTO Figure (type, isWhite, column, row, isCaptured, gameId)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """;
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, figure.getClass().getSimpleName());
+            pstmt.setBoolean(2, figure.isWhite());
+            pstmt.setInt(3, figure.getColumn());
+            pstmt.setInt(4, figure.getRow());
+            pstmt.setBoolean(5, figure.isCaptured());
+            pstmt.setInt(6, gameId);
+            pstmt.executeUpdate();
+
+            // Generierte ID abrufen und der Figur zuweisen
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    int generatedId = rs.getInt(1);
+                    figure.setId(generatedId);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Fehler beim Speichern der Figur: " + e.getMessage());
         }
     }
 
@@ -130,8 +193,10 @@ public class GameRepository {
                         rs.getInt("id"),
                         loadPlayer(conn, rs.getInt("whitePlayerId")),
                         loadPlayer(conn, rs.getInt("blackPlayerId")),
-                        loadPlayer(conn, rs.getInt("currentPlayerId")),
-                        new Figure[8][8] // Brett später laden
+                        rs.getInt("currentPlayerId") == rs.getInt("whitePlayerId")
+                                ? loadPlayer(conn, rs.getInt("whitePlayerId"))
+                                : loadPlayer(conn, rs.getInt("blackPlayerId")),
+                        new Figure[8][8]
                 );
             }
         }
@@ -148,7 +213,7 @@ public class GameRepository {
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getBoolean("isWhite"),
-                        new ArrayList<>() // Figuren später laden
+                        new ArrayList<>()
                 );
             }
         }
