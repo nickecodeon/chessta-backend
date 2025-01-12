@@ -3,19 +3,22 @@ package org.example.chess.figure;
 import org.example.chess.game.Figure;
 
 public class Knight extends Figure {
-    public Knight(int x, int y, boolean isWhite) {
-        super(x, y, isWhite);
+
+    // Konstruktor für neue Figuren
+    public Knight(int row, int column, boolean isWhite) {
+        super(row, column, isWhite);
     }
 
-    public Knight(int id, int x, int y, boolean isWhite, boolean isCaptured) {
-        super(id, x, y, isWhite, isCaptured);
+    // Konstruktor für geladene Figuren
+    public Knight(int id, int row, int column, boolean isWhite, boolean isCaptured) {
+        super(id, row, column, isWhite, isCaptured);
     }
 
     @Override
-    public boolean isValidMove(int x, int y) {
-        int dx = Math.abs(x - getColumn());
-        int dy = Math.abs(y - getRow());
+    public boolean isValidMove(int row, int column) {
+        int rowDiff = Math.abs(row - getRow());
+        int colDiff = Math.abs(column - getColumn());
 
-        return (dx == 2 && dy == 1) || (dx == 1 && dy == 2);
+        return (rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2);
     }
 }

@@ -3,19 +3,19 @@ package org.example.chess.figure;
 import org.example.chess.game.Figure;
 
 public class Bishop extends Figure {
-    public Bishop(int x, int y, boolean isWhite) {
-        super(x, y, isWhite);
+    public Bishop(int row, int col, boolean isWhite) {
+        super(row, col, isWhite);
     }
 
-    public Bishop(int id, int x, int y, boolean isWhite, boolean isCaptured) {
-        super(id, x, y, isWhite, isCaptured);
+    public Bishop(int id, int row, int col, boolean isWhite, boolean isCaptured) {
+        super(id, row, col, isWhite, isCaptured);
     }
 
     @Override
-    public boolean isValidMove(int x, int y) {
-        int dx = Math.abs(x - getColumn());
-        int dy = Math.abs(y - getRow());
+    public boolean isValidMove(int row, int col) {
+        int rowDiff = Math.abs(row - getRow());
+        int colDiff = Math.abs(col - getColumn());
 
-        return dx == dy;
+        return rowDiff == colDiff;
     }
 }

@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        // Initialisiere die Datenbank
         DatabaseSetup.initialize();
 
         Scanner scanner = new Scanner(System.in);
@@ -42,7 +43,7 @@ public class Main {
 
         // Speichere das neue Spiel in der Datenbank
         GameRepository.saveGame(game);
-        System.out.println("Spiel-ID: " + game.getId());
+        System.out.println("Neues Spiel erstellt. Spiel-ID: " + game.getId());
         return game;
     }
 
@@ -53,6 +54,8 @@ public class Main {
         Game game = GameRepository.loadGame(gameId);
         if (game == null) {
             System.out.println("Spiel nicht gefunden.");
+        } else {
+            System.out.println("Spiel erfolgreich geladen. Spiel-ID: " + gameId);
         }
         return game;
     }
@@ -60,14 +63,14 @@ public class Main {
     private static void playGame(Game game, Scanner scanner) {
         while (true) {
             System.out.println("Aktueller Spieler: " + game.getCurrentPlayer().getName());
-            System.out.println("Bitte geben Sie Ihren Zug ein (Format: vonSpalte vonReihe zuSpalte zuReihe):");
+            System.out.println("Bitte geben Sie Ihren Zug ein (Format: vonReihe vonSpalte zuReihe zuSpalte):");
 
-            int fromCol = scanner.nextInt();
             int fromRow = scanner.nextInt();
-            int toCol = scanner.nextInt();
+            int fromCol = scanner.nextInt();
             int toRow = scanner.nextInt();
+            int toCol = scanner.nextInt();
 
-            boolean moveSuccessful = game.moveFigure(fromCol, fromRow, toCol, toRow);
+            boolean moveSuccessful = game.moveFigure(fromRow, fromCol, toRow, toCol);
             if (moveSuccessful) {
                 // Speichere das Spiel nach jedem erfolgreichen Zug
                 GameRepository.saveGame(game);

@@ -2,67 +2,95 @@ package org.example.chess.game;
 
 public abstract class Figure {
     private int id;
-    private int column; // a-h aber hier 1-8
     private int row; // 1-8
-    boolean isWhite;
-    boolean isCaptured;
+    private int column; // 1-8 (a-h entspricht 1-8)
+    private boolean isWhite;
+    private boolean isCaptured;
 
-    public Figure(int column, int row, boolean isWhite) {
-        setColumn(column);
+    // Konstruktor für neue Figuren
+    public Figure(int row, int column, boolean isWhite) {
         setRow(row);
+        setColumn(column);
         setColor(isWhite);
         isCaptured = false;
     }
 
-    public Figure(int id, int column, int row, boolean isWhite, boolean isCaptured) {
+    // Konstruktor für geladene Figuren
+    public Figure(int id, int row, int column, boolean isWhite, boolean isCaptured) {
         this.id = id;
-        setColumn(column);
         setRow(row);
+        setColumn(column);
         setColor(isWhite);
         this.isCaptured = isCaptured;
     }
 
-    // methoden
+    // Methoden
 
-    public boolean moveInside(int x, int y) {
-        return (x > 0 && x < 9) && (y > 0 && y < 9);
+    /**
+     * Prüft, ob eine Bewegung innerhalb des Spielfelds bleibt.
+     */
+    public boolean moveInside(int row, int column) {
+        return (row > 0 && row < 9) && (column > 0 && column < 9);
     }
 
-    public abstract boolean isValidMove(int x, int y);
+    /**
+     * Prüft, ob eine Bewegung gültig ist.
+     * Diese Methode muss von den Unterklassen implementiert werden.
+     */
+    public abstract boolean isValidMove(int row, int column);
 
-    public boolean move(int x, int y) {
-        if (moveInside(x, y) && isValidMove(x, y)) {
-            setColumn(x);
-            setRow(y);
-
+    /**
+     * Führt eine Bewegung durch, falls sie gültig ist.
+     */
+    public boolean move(int row, int column) {
+        if (moveInside(row, column) && isValidMove(row, column)) {
+            setRow(row);
+            setColumn(column);
             return true;
         } else {
             return false;
         }
     }
 
-    // setter und getter
+    // Setter und Getter
 
     public void setRow(int row) {
         if (row < 1 || row > 8) {
-            throw new IllegalArgumentException("Invalid row or column");
+            throw new IllegalArgumentException("Row must be between 1 and 8.");
         }
         this.row = row;
     }
     public void setColumn(int column) {
         if (column < 1 || column > 8) {
-            throw new IllegalArgumentException("Invalid column or row");
+            throw new IllegalArgumentException("Column must be between 1 and 8.");
         }
         this.column = column;
     }
-    public void setColor(boolean white) { this.isWhite = white; }
-    public void setCaptured() { this.isCaptured = true; }
-    public void unsetCaptured() { this.isCaptured = false; }
-    public void setId(int id) { this.id = id; }
-
-    public int getId() { return id; }
-    public int getRow() { return row; }
-    public int getColumn() { return column; }
-    public boolean isWhite() { return isWhite; }
-    public boolean isCaptured() { return isCaptured; }
+    public void setColor(boolean white) {
+        this.isWhite = white;
+    }
+    public void setCaptured() {
+        this.isCaptured = true;
+    }
+    public void unsetCaptured() {
+        this.isCaptured = false;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public int getId() {
+        return id;
+    }
+    public int getRow() {
+        return row;
+    }
+    public int getColumn() {
+        return column;
+    }
+    public boolean isWhite() {
+        return isWhite;
+    }
+    public boolean isCaptured() {
+        return isCaptured;
+    }
 }

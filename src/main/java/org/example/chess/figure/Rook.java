@@ -3,19 +3,23 @@ package org.example.chess.figure;
 import org.example.chess.game.Figure;
 
 public class Rook extends Figure {
-    public Rook(int x, int y, boolean isWhite) {
-        super(x, y, isWhite);
+
+    // Konstruktor für neue Figuren
+    public Rook(int row, int column, boolean isWhite) {
+        super(row, column, isWhite);
     }
 
-    public Rook(int id, int x, int y, boolean isWhite, boolean isCaptured) {
-        super(id, x, y, isWhite, isCaptured);
+    // Konstruktor für geladene Figuren
+    public Rook(int id, int row, int column, boolean isWhite, boolean isCaptured) {
+        super(id, row, column, isWhite, isCaptured);
     }
 
     @Override
-    public boolean isValidMove(int x, int y) {
-        int dx = Math.abs(x - getColumn());
-        int dy = Math.abs(y - getRow());
+    public boolean isValidMove(int row, int column) {
+        int rowDiff = Math.abs(row - getRow());
+        int colDiff = Math.abs(column - getColumn());
 
-        return dx == 0 || dy == 0;
+        // Ein Turm kann sich nur horizontal oder vertikal bewegen
+        return rowDiff == 0 || colDiff == 0;
     }
 }

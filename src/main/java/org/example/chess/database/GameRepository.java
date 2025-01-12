@@ -111,11 +111,11 @@ public class GameRepository {
 
     public static void saveFigure(Connection conn, Figure figure, int gameId) throws SQLException {
         String sql = """
-            INSERT INTO Figure (id, type, isWhite, column, row, isCaptured, gameId)
+            INSERT INTO Figure (id, type, isWhite, row, column, isCaptured, gameId)
             VALUES (?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(id) DO UPDATE SET
-                column = excluded.column,
                 row = excluded.row,
+                column = excluded.column,
                 isCaptured = excluded.isCaptured
             """;
 
@@ -129,8 +129,8 @@ public class GameRepository {
                     pstmt.setInt(1, figure.getId());
                     pstmt.setString(2, figure.getClass().getSimpleName());
                     pstmt.setBoolean(3, figure.isWhite());
-                    pstmt.setInt(4, figure.getColumn());
-                    pstmt.setInt(5, figure.getRow());
+                    pstmt.setInt(4, figure.getRow());
+                    pstmt.setInt(5, figure.getColumn());
                     pstmt.setBoolean(6, figure.isCaptured());
                     pstmt.setInt(7, gameId);
                     pstmt.executeUpdate();
@@ -143,15 +143,15 @@ public class GameRepository {
 
     private static void insertFigure(Connection conn, Figure figure, int gameId) throws SQLException {
         String sql = """
-            INSERT INTO Figure (type, isWhite, column, row, isCaptured, gameId)
+            INSERT INTO Figure (type, isWhite, row, column, isCaptured, gameId)
             VALUES (?, ?, ?, ?, ?, ?)
             """;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, figure.getClass().getSimpleName());
             pstmt.setBoolean(2, figure.isWhite());
-            pstmt.setInt(3, figure.getColumn());
-            pstmt.setInt(4, figure.getRow());
+            pstmt.setInt(3, figure.getRow());
+            pstmt.setInt(4, figure.getColumn());
             pstmt.setBoolean(5, figure.isCaptured());
             pstmt.setInt(6, gameId);
             pstmt.executeUpdate();

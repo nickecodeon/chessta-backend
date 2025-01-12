@@ -27,38 +27,30 @@ public class Game {
         this.board = board;
     }
 
-    public Game(int id, int whitePlayerId, int blackPlayerId, int currentPlayerId) {
-        this.id = id;
-        this.whitePlayer = null; // Später laden
-        this.blackPlayer = null; // Später laden
-        this.currentPlayer = null; // Später laden
-        this.board = new Figure[8][8]; // Leeres Brett
-    }
-
     public void initializeBoard() {
         // Figuren für den weißen Spieler
         whitePlayer.addPiece(new Rook(1, 1, true));
-        whitePlayer.addPiece(new Knight(2, 1, true));
-        whitePlayer.addPiece(new Bishop(3, 1, true));
-        whitePlayer.addPiece(new Queen(4, 1, true));
-        whitePlayer.addPiece(new King(5, 1, true));
-        whitePlayer.addPiece(new Bishop(6, 1, true));
-        whitePlayer.addPiece(new Knight(7, 1, true));
-        whitePlayer.addPiece(new Rook(8, 1, true));
-        for (int i = 1; i <= 8; i++) {
-            whitePlayer.addPiece(new Pawn(i, 2, true));
+        whitePlayer.addPiece(new Knight(1, 2, true));
+        whitePlayer.addPiece(new Bishop(1, 3, true));
+        whitePlayer.addPiece(new Queen(1, 4, true));
+        whitePlayer.addPiece(new King(1, 5, true));
+        whitePlayer.addPiece(new Bishop(1, 6, true));
+        whitePlayer.addPiece(new Knight(1, 7, true));
+        whitePlayer.addPiece(new Rook(1, 8, true));
+        for (int col = 1; col <= 8; col++) {
+            whitePlayer.addPiece(new Pawn(2, col, true));
         }
 
-        blackPlayer.addPiece(new Rook(1, 8, false));
-        blackPlayer.addPiece(new Knight(2, 8, false));
-        blackPlayer.addPiece(new Bishop(3, 8, false));
-        blackPlayer.addPiece(new Queen(4, 8, false));
-        blackPlayer.addPiece(new King(5, 8, false));
-        blackPlayer.addPiece(new Bishop(6, 8, false));
-        blackPlayer.addPiece(new Knight(7, 8, false));
+        blackPlayer.addPiece(new Rook(8, 1, false));
+        blackPlayer.addPiece(new Knight(8, 2, false));
+        blackPlayer.addPiece(new Bishop(8, 3, false));
+        blackPlayer.addPiece(new Queen(8, 4, false));
+        blackPlayer.addPiece(new King(8, 5, false));
+        blackPlayer.addPiece(new Bishop(8, 6, false));
+        blackPlayer.addPiece(new Knight(8, 7, false));
         blackPlayer.addPiece(new Rook(8, 8, false));
-        for (int i = 1; i <= 8; i++) {
-            blackPlayer.addPiece(new Pawn(i, 7, false));
+        for (int col = 1; col <= 8; col++) {
+            blackPlayer.addPiece(new Pawn(7, col, false));
         }
 
         // Figuren dem Board zuweisen
@@ -70,69 +62,63 @@ public class Game {
         }
     }
 
-    public boolean moveFigure(int fromCol, int fromRow, int toCol, int toRow) {
-        if (!validateMove(fromCol, fromRow, toCol, toRow)) {
+    public boolean moveFigure(int fromRow, int fromCol, int toRow, int toCol) {
+        if (!validateMove(fromRow, fromCol, toRow, toCol)) {
             return false;
         }
 
-        executeMove(fromCol, fromRow, toCol, toRow);
+        executeMove(fromRow, fromCol, toRow, toCol);
         return true;
     }
 
-    public boolean validateMove(int fromCol, int fromRow, int toCol, int toRow) {
-        Figure figure = getFigureAtPosition(fromCol, fromRow);
-        System.out.println("Figure: " + figure.getClass().getSimpleName());
-
-        // Wenn keine Figur oder Figur des Gegners bewegt werden soll
+    public boolean validateMove(int fromRow, int fromCol, int toRow, int toCol) {
+        Figure figure = getFigureAtPosition(fromRow, fromCol);
         if (figure == null || figure.isWhite() != currentPlayer.isWhite()) {
             System.out.println("Invalid Player");
             return false;
         }
 
-        if (!figure.isValidMove(toCol, toRow)) {
+        if (!figure.isValidMove(toRow, toCol)) {
             System.out.println("Invalid Move");
             return false;
         }
 
         // Prüfen, ob die Zielposition blockiert ist (eigene Figur)
-        Figure targetFigure = getFigureAtPosition(toCol, toRow);
+        Figure targetFigure = getFigureAtPosition(toRow, toCol);
         if (targetFigure != null && targetFigure.isWhite() == currentPlayer.isWhite()) {
             System.out.println("Eigene Figur blockiert");
             return false; // Eigene Figur blockiert den Zug
         }
 
-        // ! Test, ob König ich Schach steht muss noch hinzugefügt werden
-        // if (wouldKingBeInCheck)
-
         return true;
     }
 
-    private void executeMove(int fromCol, int fromRow, int toCol, int toRow) {
-        Figure figure = getFigureAtPosition(fromCol, fromRow);
-        Figure targetFigure = getFigureAtPosition(toCol, toRow);
+    private void executeMove(int fromRow, int fromCol, int toRow, int toCol) {
+        Figure figure = getFigureAtPosition(fromRow, fromCol);
+        Figure targetFigure = getFigureAtPosition(toRow, toCol);
 
         // Entferne geschlagene Figur
         if (targetFigure != null) {
             getOpponentPlayer().removePiece(targetFigure);
         }
 
-        if(figure.move(toCol, toRow)) {
+        if (figure.move(toRow, toCol)) {
             board[toRow - 1][toCol - 1] = figure;
-            board[fromRow- 1][fromCol - 1] = null;
+            board[fromRow - 1][fromCol - 1] = null;
         }
 
         switchTurn();
     }
 
     public void switchTurn() {
-        setCurrentPlayer((currentPlayer == whitePlayer) ? blackPlayer : whitePlayer);
+        setCurrentPlayer(this.currentPlayer == this.whitePlayer ? this.blackPlayer : this.whitePlayer);
     }
 
-    public boolean isPositionOccupied(int col, int row) {
-        return board[col - 1][row - 1] != null;
+    public boolean isPositionOccupied(int row, int col) {
+        return board[row - 1][col - 1] != null;
     }
 
-    public boolean isEnemyAtPosition(int col, int row, boolean isWhitePlayer) {
+    public boolean isEnemyAtPosition(int row, int col, boolean isWhitePlayer) {
         Figure figure = board[row - 1][col - 1];
         return figure != null && figure.isWhite() != isWhitePlayer;
     }
@@ -158,7 +144,7 @@ public class Game {
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
-    public Figure getFigureAtPosition(int col, int row) {
+    public Figure getFigureAtPosition(int row, int col) {
         return board[row - 1][col - 1];
     }
     public Player getOpponentPlayer() {
@@ -180,5 +166,4 @@ public class Game {
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
-
 }
