@@ -1,21 +1,19 @@
 plugins {
+    id("org.springframework.boot") version("3.1.4")
+    id("io.spring.dependency-management") version("1.1.3")
     id("java")
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "org.example.chessta"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    implementation ("org.xerial:sqlite-jdbc:3.41.2.1")
-    implementation ("org.springframework.boot:spring-boot-starter-data-jpa:3.1.3")
-}
-
-tasks.test {
-    useJUnitPlatform()
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    runtimeOnly("mysql:mysql-connector-java:8.0.33")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

@@ -1,8 +1,14 @@
-package org.example.chess.figure;
+package org.example.chessta.model.figure;
 
-import org.example.chess.game.Figure;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import org.example.chessta.model.game.Figure;
 
+@Entity
+@DiscriminatorValue("Queen")
 public class Queen extends Figure {
+    public Queen() {
+    }
 
     // Konstruktor für neue Figuren
     public Queen(int row, int column, boolean isWhite) {
@@ -16,8 +22,8 @@ public class Queen extends Figure {
 
     @Override
     public boolean isValidMove(int row, int column) {
-        int rowDiff = Math.abs(row - getRow());
-        int colDiff = Math.abs(column - getColumn());
+        int rowDiff = Math.abs(row - getBoard_row());
+        int colDiff = Math.abs(column - getBoard_column());
 
         // Eine Dame kann sich diagonal, horizontal oder vertikal bewegen
         return rowDiff == colDiff || rowDiff == 0 || colDiff == 0;

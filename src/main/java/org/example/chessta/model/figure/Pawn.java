@@ -1,8 +1,14 @@
-package org.example.chess.figure;
+package org.example.chessta.model.figure;
 
-import org.example.chess.game.Figure;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import org.example.chessta.model.game.Figure;
 
+@Entity
+@DiscriminatorValue("Pawn")
 public class Pawn extends Figure {
+    public Pawn() {
+    }
 
     // Konstruktor für neue Bauern
     public Pawn(int row, int column, boolean isWhite) {
@@ -16,8 +22,8 @@ public class Pawn extends Figure {
 
     @Override
     public boolean isValidMove(int row, int column) {
-        int colDiff = Math.abs(column - getColumn());
-        int rowDiff = row - getRow();
+        int colDiff = Math.abs(column - getBoard_column());
+        int rowDiff = row - getBoard_row();
 
         if (isWhite()) {
             // Weißer Bauer kann nur vorwärts ziehen
@@ -25,7 +31,7 @@ public class Pawn extends Figure {
                 return true; // Ein Feld vorwärts
             }
 
-            if (colDiff == 0 && rowDiff == 2 && getRow() == 2) {
+            if (colDiff == 0 && rowDiff == 2 && getBoard_row() == 2) {
                 return true; // Zwei Felder vorwärts aus der Grundstellung
             }
             /*
@@ -39,7 +45,7 @@ public class Pawn extends Figure {
                 return true; // Ein Feld rückwärts
             }
 
-            if (colDiff == 0 && rowDiff == -2 && getRow() == 7) {
+            if (colDiff == 0 && rowDiff == -2 && getBoard_row() == 7) {
                 return true; // Zwei Felder rückwärts aus der Grundstellung
             }
 

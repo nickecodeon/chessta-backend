@@ -1,4 +1,4 @@
-package org.example.chess.database;
+package org.example.chessta.database;
 
 import java.sql.Connection;
 import java.sql.SQLException;
