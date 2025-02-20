@@ -14,20 +14,14 @@ public class GameService {
     private GameRepository gameRepository;
 
     @Autowired
-    private FigureRepository figureRepository;
+    private FigureService figureService;
 
-    /**
-     * Erstellt ein neues Spiel und initialisiert das Spielbrett.
-     */
     public Game createNewGame(String whitePlayerName, String blackPlayerName) {
         Game game = new Game(whitePlayerName, blackPlayerName);
-        game.initializeBoard(figureRepository);
+        game.initializeBoard(figureService);
         return gameRepository.save(game);
     }
 
-    /**
-     * Lädt ein Spiel anhand seiner ID.
-     */
     public Game loadGame(int gameId) {
         return gameRepository.findById(gameId)
                 .orElseThrow(() -> new RuntimeException("Spiel mit ID " + gameId + " nicht gefunden."));
@@ -43,15 +37,12 @@ public class GameService {
         return !gameRepository.existsById(gameId);
     }
 
-    /**
-     * Führt einen Zug aus und speichert die Änderungen in der Datenbank.
-     */
     public boolean executeMove(int gameId, int fromRow, int fromCol, int toRow, int toCol) {
         // Lade das Spiel
         Game game = loadGame(gameId);
 
         // Finde die Figur an der Startposition
-        Figure movingFigure = findFigureAtPosition(game, fromRow, fromCol);
+        Figure movingFigure = figureService.findFigureAtPosition(game, fromRow, fromCol);
         if (movingFigure == null) {
             return false;
         }
@@ -62,20 +53,17 @@ public class GameService {
         }
 
         // Finde die Figur an der Zielposition
-        Figure targetFigure = findFigureAtPosition(game, toRow, toCol);
+        Figure targetFigure = figureService.findFigureAtPosition(game, toRow, toCol);
 
         // Entferne geschlagene Figuren
         if (targetFigure != null && targetFigure.isWhite() != movingFigure.isWhite()) {
-            targetFigure.setCaptured(true);
-            figureRepository.save(targetFigure);
+            figureService.captureFigure(targetFigure);
         }
 
         // Aktualisiere die Position der Figur
-        movingFigure.setBoard_row(toRow);
-        movingFigure.setBoard_column(toCol);
-        figureRepository.save(movingFigure);
+        figureService.moveFigure(movingFigure, toRow, toCol);
 
-        // Aktualisiere den Spielerzug
+        // Aktualisiere den Spielzug
         game.setCurrentPlayer(game.getCurrentPlayer() == game.getWhitePlayer() ? game.getBlackPlayer() : game.getWhitePlayer());
         gameRepository.save(game);
 
@@ -83,23 +71,10 @@ public class GameService {
         return true;
     }
 
-    /**
-     * Findet eine Figur an einer bestimmten Position im Spiel.
-     */
-    private Figure findFigureAtPosition(Game game, int row, int col) {
-        List<Integer> figureIds = game.getFigureIds();
-        return figureIds.stream()
-                .map(id -> figureRepository.findById(id)
-                        .orElse(null))
-                .filter(figure -> figure != null && figure.getBoard_row() == row && figure.getBoard_column() == col)
-                .findFirst()
-                .orElse(null);
+
+    public List<Figure> getFiguresInGame(int gameId) {
+        Game game = loadGame(gameId);
+        return figureService.getFiguresByGame(game);
     }
 
-    /**
-     * Prüft, ob eine Position auf dem Spielfeld besetzt ist.
-     */
-    public boolean isPositionOccupied(Game game, int row, int col) {
-        return findFigureAtPosition(game, row, col) != null;
-    }
 }

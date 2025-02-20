@@ -47,30 +47,10 @@ public abstract class Figure {
     // Methoden
 
     /**
-     * Prüft, ob eine Bewegung innerhalb des Spielfelds bleibt.
-     */
-    public boolean moveInside(int row, int column) {
-        return (row > 0 && row < 9) && (column > 0 && column < 9);
-    }
-
-    /**
      * Prüft, ob eine Bewegung gültig ist.
      * Diese Methode muss von den Unterklassen implementiert werden.
      */
     public abstract boolean isValidMove(int row, int column);
-
-    /**
-     * Führt eine Bewegung durch, falls sie gültig ist.
-     */
-    public boolean move(int row, int column) {
-        if (moveInside(row, column) && isValidMove(row, column)) {
-            setBoard_row(row);
-            setBoard_column(column);
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     // Setter und Getter
 

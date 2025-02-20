@@ -1,5 +1,6 @@
 package org.example.chessta.controller;
 
+import org.example.chessta.model.game.Figure;
 import org.example.chessta.model.game.Game;
 import org.example.chessta.service.GameService;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,16 @@ public class GameController {
         Game game = gameService.loadGame(id);
         if (game != null) {
             return ResponseEntity.ok(game);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Lade alle Figuren eines Spiels
+    @GetMapping("/{id}/figures")
+    public ResponseEntity<List<Figure>> getFigures(@PathVariable int id) {
+        List<Figure> figures = gameService.getFiguresInGame(id);
+        if (figures != null) {
+            return ResponseEntity.ok(figures);
         }
         return ResponseEntity.notFound().build();
     }

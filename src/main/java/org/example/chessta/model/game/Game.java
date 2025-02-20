@@ -1,8 +1,8 @@
 package org.example.chessta.model.game;
 
 import jakarta.persistence.*;
-import org.example.chessta.repository.FigureRepository;
 import org.example.chessta.model.figure.*;
+import org.example.chessta.service.FigureService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,83 +42,44 @@ public class Game {
         this.currentPlayer = this.whitePlayer;
     }
 
-    // Konstruktor für geladene Spiele
-    public Game(int id, Player whitePlayer, Player blackPlayer, Player currentPlayer, List<Integer> figureIds) {
-        this.id = id;
-        this.whitePlayer = whitePlayer;
-        this.blackPlayer = blackPlayer;
-        this.currentPlayer = currentPlayer;
-        this.figureIds = figureIds;
-    }
-
     // --- Methoden ---
 
-    /**
-     * Initialisiert das Spielbrett, erstellt die Figuren und fügt ihre IDs hinzu.
-     */
-    public void initializeBoard(FigureRepository figureRepository) {
+    public void initializeBoard(FigureService figureService) {
         // IDs der Figuren für das Spiel
         List<Integer> figureIds = new ArrayList<>();
 
         // Weiß: Backrow
-        figureIds.add(figureRepository.save(new Rook(1, 1, true)).getId());
-        figureIds.add(figureRepository.save(new Knight(1, 2, true)).getId());
-        figureIds.add(figureRepository.save(new Bishop(1, 3, true)).getId());
-        figureIds.add(figureRepository.save(new Queen(1, 4, true)).getId());
-        figureIds.add(figureRepository.save(new King(1, 5, true)).getId());
-        figureIds.add(figureRepository.save(new Bishop(1, 6, true)).getId());
-        figureIds.add(figureRepository.save(new Knight(1, 7, true)).getId());
-        figureIds.add(figureRepository.save(new Rook(1, 8, true)).getId());
+        figureIds.add(figureService.saveFigure(new Rook(1, 1, true)).getId());
+        figureIds.add(figureService.saveFigure(new Knight(1, 2, true)).getId());
+        figureIds.add(figureService.saveFigure(new Bishop(1, 3, true)).getId());
+        figureIds.add(figureService.saveFigure(new Queen(1, 4, true)).getId());
+        figureIds.add(figureService.saveFigure(new King(1, 5, true)).getId());
+        figureIds.add(figureService.saveFigure(new Bishop(1, 6, true)).getId());
+        figureIds.add(figureService.saveFigure(new Knight(1, 7, true)).getId());
+        figureIds.add(figureService.saveFigure(new Rook(1, 8, true)).getId());
 
         // Weiß: Pawns
         for (int col = 1; col <= 8; col++) {
-            figureIds.add(figureRepository.save(new Pawn(2, col, true)).getId());
+            figureIds.add(figureService.saveFigure(new Pawn(2, col, true)).getId());
         }
 
         // Schwarz: Backrow
-        figureIds.add(figureRepository.save(new Rook(8, 1, false)).getId());
-        figureIds.add(figureRepository.save(new Knight(8, 2, false)).getId());
-        figureIds.add(figureRepository.save(new Bishop(8, 3, false)).getId());
-        figureIds.add(figureRepository.save(new Queen(8, 4, false)).getId());
-        figureIds.add(figureRepository.save(new King(8, 5, false)).getId());
-        figureIds.add(figureRepository.save(new Bishop(8, 6, false)).getId());
-        figureIds.add(figureRepository.save(new Knight(8, 7, false)).getId());
-        figureIds.add(figureRepository.save(new Rook(8, 8, false)).getId());
+        figureIds.add(figureService.saveFigure(new Rook(8, 1, false)).getId());
+        figureIds.add(figureService.saveFigure(new Knight(8, 2, false)).getId());
+        figureIds.add(figureService.saveFigure(new Bishop(8, 3, false)).getId());
+        figureIds.add(figureService.saveFigure(new Queen(8, 4, false)).getId());
+        figureIds.add(figureService.saveFigure(new King(8, 5, false)).getId());
+        figureIds.add(figureService.saveFigure(new Bishop(8, 6, false)).getId());
+        figureIds.add(figureService.saveFigure(new Knight(8, 7, false)).getId());
+        figureIds.add(figureService.saveFigure(new Rook(8, 8, false)).getId());
 
         // Schwarz: Pawns
         for (int col = 1; col <= 8; col++) {
-            figureIds.add(figureRepository.save(new Pawn(7, col, false)).getId());
+            figureIds.add(figureService.saveFigure(new Pawn(7, col, false)).getId());
         }
 
         // Figuren-IDs zum Spiel hinzufügen
         this.figureIds = figureIds;
-    }
-
-    /**
-     * Lädt eine Figur anhand ihrer ID.
-     */
-    public Figure getFigureById(FigureRepository figureRepository, int figureId) {
-        return figureRepository.findById(figureId)
-                .orElseThrow(() -> new RuntimeException("Figur mit ID " + figureId + " nicht gefunden."));
-    }
-
-    /**
-     * Überprüft, ob eine Position auf dem Spielfeld besetzt ist.
-     */
-    public boolean isPositionOccupied(FigureRepository figureRepository, int row, int col) {
-        return figureIds.stream()
-                .map(id -> getFigureById(figureRepository, id))
-                .anyMatch(figure -> figure.getBoard_row() == row && figure.getBoard_column() == col);
-    }
-
-    /**
-     * Überprüft, ob eine gegnerische Figur an einer bestimmten Position steht.
-     */
-    public boolean isEnemyAtPosition(FigureRepository figureRepository, int row, int col, boolean isWhitePlayer) {
-        return figureIds.stream()
-                .map(id -> getFigureById(figureRepository, id))
-                .filter(figure -> figure.getBoard_row() == row && figure.getBoard_column() == col)
-                .anyMatch(figure -> figure.isWhite() != isWhitePlayer);
     }
 
     // --- Getter und Setter ---
