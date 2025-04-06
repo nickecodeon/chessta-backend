@@ -1,7 +1,7 @@
 package org.example.chessta.service;
 
-import org.example.chessta.model.game.Figure;
-import org.example.chessta.model.game.Game;
+import org.example.chessta.model.gameModels.Figure;
+import org.example.chessta.model.gameModels.Game;
 import org.example.chessta.repository.FigureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,10 @@ public class FigureService {
 
     public Figure saveFigure(Figure figure) {
         return figureRepository.save(figure);
+    }
+
+    public List<Figure> saveFigures(List<Figure> figures) {
+        return figureRepository.saveAll(figures);
     }
 
     public Figure getFigureById(int figureId) {
@@ -54,16 +58,10 @@ public class FigureService {
     }
 
     public List<Figure> getFiguresByGame(Game game) {
-        List<Integer> figureIds = game.getFigureIds();
-        List<Figure> figures = new ArrayList<>();
+        return figureRepository.findAllById(game.getFigureIds());
+    }
 
-        for (Integer figureId : figureIds) {
-            Figure figure = figureRepository.findById(figureId).orElse(null);
-            if (figure != null) {
-                figures.add(figure);
-            }
-        }
-
-        return figures;
+    public void deleteFigureById(int figureId) {
+        figureRepository.deleteById(figureId);
     }
 }

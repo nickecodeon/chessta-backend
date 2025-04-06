@@ -1,20 +1,20 @@
-package org.example.chessta.model.figure;
+package org.example.chessta.model.figureModels;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import org.example.chessta.model.game.Figure;
+import org.example.chessta.model.gameModels.Figure;
 
 @Entity
-@DiscriminatorValue("King")
-public class King extends Figure {
-    public King() {
+@DiscriminatorValue("Bishop")
+public class Bishop extends Figure {
+    public Bishop() {
     }
 
-    public King(int row, int col, boolean isWhite) {
+    public Bishop(int row, int col, boolean isWhite) {
         super(row, col, isWhite);
     }
 
-    public King(int id, int row, int col, boolean isWhite, boolean isCaptured) {
+    public Bishop(int id, int row, int col, boolean isWhite, boolean isCaptured) {
         super(id, row, col, isWhite, isCaptured);
     }
 
@@ -23,6 +23,6 @@ public class King extends Figure {
         int rowDiff = Math.abs(row - getBoard_row());
         int colDiff = Math.abs(col - getBoard_column());
 
-        return rowDiff <= 1 && colDiff <= 1;
+        return rowDiff == colDiff;
     }
 }

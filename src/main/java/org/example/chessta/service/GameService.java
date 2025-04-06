@@ -1,7 +1,7 @@
 package org.example.chessta.service;
 
 import org.example.chessta.repository.*;
-import org.example.chessta.model.game.*;
+import org.example.chessta.model.gameModels.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,17 @@ public class GameService {
     @Autowired
     private FigureService figureService;
 
+    @Autowired
+    private MoveService moveService;
+
+    public GameService(GameRepository gameRepository, FigureService figureService, MoveService moveService) {
+        this.gameRepository = gameRepository;
+        this.figureService = figureService;
+        this.moveService = moveService;
+    }
+
     public Game createNewGame(String whitePlayerName, String blackPlayerName) {
-        Game game = new Game(whitePlayerName, blackPlayerName);
-        game.initializeBoard(figureService);
+        Game game = new Game(whitePlayerName, blackPlayerName, figureService);
         return gameRepository.save(game);
     }
 
@@ -32,9 +40,17 @@ public class GameService {
     }
 
     public boolean deleteGame(int gameId) {
+        deleteFiguresFromGame(gameId);
+        moveService.deleteMovesForGame(gameId);
         gameRepository.deleteById(gameId);
-
         return !gameRepository.existsById(gameId);
+    }
+
+    public void deleteFiguresFromGame(int gameId) {
+        List<Figure> figures = getFiguresInGame(gameId);
+        for (Figure figure : figures) {
+            figureService.deleteFigureById(figure.getId());
+        }
     }
 
     public boolean executeMove(int gameId, int fromRow, int fromCol, int toRow, int toCol) {
@@ -62,6 +78,9 @@ public class GameService {
 
         // Aktualisiere die Position der Figur
         figureService.moveFigure(movingFigure, toRow, toCol);
+
+        // Speichere den Move
+        moveService.createMove(movingFigure, toRow, toCol, targetFigure != null, game);
 
         // Aktualisiere den Spielzug
         game.setCurrentPlayer(game.getCurrentPlayer() == game.getWhitePlayer() ? game.getBlackPlayer() : game.getWhitePlayer());

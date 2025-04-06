@@ -1,7 +1,9 @@
 package org.example.chessta.controller;
 
-import org.example.chessta.model.game.Figure;
-import org.example.chessta.model.game.Game;
+import org.example.chessta.dto.FigureDTO;
+import org.example.chessta.dto.GameDTO;
+import org.example.chessta.model.gameModels.Figure;
+import org.example.chessta.model.gameModels.Game;
 import org.example.chessta.service.GameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,27 +22,27 @@ public class GameController {
 
     // Erstelle ein neues Spiel
     @PostMapping("/new")
-    public ResponseEntity<Game> createNewGame(@RequestParam String whitePlayerName, @RequestParam String blackPlayerName) {
+    public ResponseEntity<GameDTO> createNewGame(@RequestParam String whitePlayerName, @RequestParam String blackPlayerName) {
         Game game = gameService.createNewGame(whitePlayerName, blackPlayerName);
-        return ResponseEntity.ok(game);
+        return ResponseEntity.ok(GameDTO.fromEntity(game));
     }
 
     // Lade ein Spiel anhand der ID
     @GetMapping("/{id}")
-    public ResponseEntity<Game> loadGame(@PathVariable int id) {
+    public ResponseEntity<GameDTO> loadGame(@PathVariable int id) {
         Game game = gameService.loadGame(id);
         if (game != null) {
-            return ResponseEntity.ok(game);
+            return ResponseEntity.ok(GameDTO.fromEntity(game));
         }
         return ResponseEntity.notFound().build();
     }
 
     // Lade alle Figuren eines Spiels
     @GetMapping("/{id}/figures")
-    public ResponseEntity<List<Figure>> getFigures(@PathVariable int id) {
+    public ResponseEntity<List<FigureDTO>> getFigures(@PathVariable int id) {
         List<Figure> figures = gameService.getFiguresInGame(id);
         if (figures != null) {
-            return ResponseEntity.ok(figures);
+            return ResponseEntity.ok(FigureDTO.fromEntity(figures));
         }
         return ResponseEntity.notFound().build();
     }

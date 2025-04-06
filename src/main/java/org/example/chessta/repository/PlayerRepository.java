@@ -1,6 +1,6 @@
 package org.example.chessta.repository;
 
-import org.example.chessta.model.game.Player;
+import org.example.chessta.model.gameModels.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

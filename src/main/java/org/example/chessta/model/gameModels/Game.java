@@ -1,7 +1,7 @@
-package org.example.chessta.model.game;
+package org.example.chessta.model.gameModels;
 
 import jakarta.persistence.*;
-import org.example.chessta.model.figure.*;
+import org.example.chessta.model.figureModels.*;
 import org.example.chessta.service.FigureService;
 
 import java.util.ArrayList;
@@ -36,50 +36,32 @@ public class Game {
     }
 
     // Konstruktor für ein neues Spiel
-    public Game(String whitePlayerName, String blackPlayerName) {
+    public Game(String whitePlayerName, String blackPlayerName, FigureService figureService) {
         this.whitePlayer = new Player(whitePlayerName, true);
         this.blackPlayer = new Player(blackPlayerName, false);
         this.currentPlayer = this.whitePlayer;
+        initializeBoard(figureService);
     }
 
     // --- Methoden ---
 
     public void initializeBoard(FigureService figureService) {
-        // IDs der Figuren für das Spiel
-        List<Integer> figureIds = new ArrayList<>();
+        List<Figure> figures = List.of(
+                new Rook(1, 1, true), new Knight(1, 2, true), new Bishop(1, 3, true),
+                new Queen(1, 4, true), new King(1, 5, true), new Bishop(1, 6, true),
+                new Knight(1, 7, true), new Rook(1, 8, true),
+                new Rook(8, 1, false), new Knight(8, 2, false), new Bishop(8, 3, false),
+                new Queen(8, 4, false), new King(8, 5, false), new Bishop(8, 6, false),
+                new Knight(8, 7, false), new Rook(8, 8, false)
+        );
 
-        // Weiß: Backrow
-        figureIds.add(figureService.saveFigure(new Rook(1, 1, true)).getId());
-        figureIds.add(figureService.saveFigure(new Knight(1, 2, true)).getId());
-        figureIds.add(figureService.saveFigure(new Bishop(1, 3, true)).getId());
-        figureIds.add(figureService.saveFigure(new Queen(1, 4, true)).getId());
-        figureIds.add(figureService.saveFigure(new King(1, 5, true)).getId());
-        figureIds.add(figureService.saveFigure(new Bishop(1, 6, true)).getId());
-        figureIds.add(figureService.saveFigure(new Knight(1, 7, true)).getId());
-        figureIds.add(figureService.saveFigure(new Rook(1, 8, true)).getId());
-
-        // Weiß: Pawns
         for (int col = 1; col <= 8; col++) {
-            figureIds.add(figureService.saveFigure(new Pawn(2, col, true)).getId());
+            figures.add(new Pawn(2, col, true));
+            figures.add(new Pawn(7, col, false));
         }
 
-        // Schwarz: Backrow
-        figureIds.add(figureService.saveFigure(new Rook(8, 1, false)).getId());
-        figureIds.add(figureService.saveFigure(new Knight(8, 2, false)).getId());
-        figureIds.add(figureService.saveFigure(new Bishop(8, 3, false)).getId());
-        figureIds.add(figureService.saveFigure(new Queen(8, 4, false)).getId());
-        figureIds.add(figureService.saveFigure(new King(8, 5, false)).getId());
-        figureIds.add(figureService.saveFigure(new Bishop(8, 6, false)).getId());
-        figureIds.add(figureService.saveFigure(new Knight(8, 7, false)).getId());
-        figureIds.add(figureService.saveFigure(new Rook(8, 8, false)).getId());
-
-        // Schwarz: Pawns
-        for (int col = 1; col <= 8; col++) {
-            figureIds.add(figureService.saveFigure(new Pawn(7, col, false)).getId());
-        }
-
-        // Figuren-IDs zum Spiel hinzufügen
-        this.figureIds = figureIds;
+        List<Figure> savedFigures = figureService.saveFigures(figures);  // Speichert alle auf einmal
+        this.figureIds = savedFigures.stream().map(Figure::getId).toList();
     }
 
     // --- Getter und Setter ---

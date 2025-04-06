@@ -1,8 +1,8 @@
-package org.example.chessta.model.figure;
+package org.example.chessta.model.figureModels;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import org.example.chessta.model.game.Figure;
+import org.example.chessta.model.gameModels.Figure;
 
 @Entity
 @DiscriminatorValue("Pawn")
