@@ -1,32 +1,35 @@
-.gradle
+### Build ###
+.gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
+out/
+bin/
+dist/
+
+# Ausnahmen (falls du bestimmte Build-Ordner versionieren willst – optional)
+!**/src/main/**/out/
+!**/src/test/**/out/
 !**/src/main/**/build/
 !**/src/test/**/build/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### Gradle Wrapper ###
+!gradle/wrapper/gradle-wrapper.jar
 
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+.idea/
 *.iws
 *.iml
 *.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
 ### Eclipse ###
-.apt_generated
 .classpath
-.factorypath
 .project
-.settings
+.settings/
+.apt_generated
+.factorypath
 .springBeans
 .sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
 
 ### NetBeans ###
 /nbproject/private/
@@ -38,5 +41,20 @@ bin/
 ### VS Code ###
 .vscode/
 
-### Mac OS ###
-.DS_Store
+### OS-spezifisch ###
+.DS_Store      # macOS
+Thumbs.db      # Windows
+ehthumbs.db    # Windows
+
+### Temporäre/Log-Dateien ###
+*.log
+*.tmp
+*.bak
+*.old
+*.swp
+
+### Sonstiges ###
+*.class
+*.jar
+*.war
+*.ear
