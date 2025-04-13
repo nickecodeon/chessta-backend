@@ -14,10 +14,6 @@ public class King extends Figure {
         super(row, col, isWhite);
     }
 
-    public King(int id, int row, int col, boolean isWhite, boolean isCaptured) {
-        super(id, row, col, isWhite, isCaptured);
-    }
-
     @Override
     public boolean isValidMove(int row, int col) {
         int rowDiff = Math.abs(row - getBoard_row());

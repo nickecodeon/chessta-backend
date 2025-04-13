@@ -9,9 +9,9 @@ public class GameDTO {
     private String whitePlayer;
     private String blackPlayer;
     private String currentPlayer;
-    private List<Integer> figures;
+    private List<FigureDTO> figures;
 
-    public GameDTO(int id, String whitePlayer, String blackPlayer, String currentPlayer, List<Integer> figures) {
+    public GameDTO(int id, String whitePlayer, String blackPlayer, String currentPlayer, List<FigureDTO> figures) {
         this.id = id;
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
@@ -19,13 +19,13 @@ public class GameDTO {
         this.figures = figures;
     }
 
-    public static GameDTO fromEntity(Game game) {
+    public static GameDTO fromEntity(Game game, List<FigureDTO> figures) {
         return new GameDTO(
                 game.getId(),
                 game.getWhitePlayer().getName(),
                 game.getBlackPlayer().getName(),
                 game.getCurrentPlayer().getName(),
-                game.getFigureIds()
+                figures
         );
     }
 
@@ -46,7 +46,7 @@ public class GameDTO {
         return currentPlayer;
     }
 
-    public List<Integer> getFigures() {
+    public List<FigureDTO> getFigures() {
         return figures;
     }
 
@@ -66,7 +66,7 @@ public class GameDTO {
         this.currentPlayer = currentPlayer;
     }
 
-    public void setFigures(List<Integer> figures) {
+    public void setFigures(List<FigureDTO> figures) {
         this.figures = figures;
     }
 }

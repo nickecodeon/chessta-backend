@@ -31,9 +31,9 @@ public class Game {
     @Column(name = "figure_id")
     private List<Integer> figureIds = new ArrayList<>();
 
-    // Standardkonstruktor (erforderlich für JPA)
-    protected Game() {
-    }
+    // --- Konstruktoren ---
+
+    protected Game() {}
 
     // Konstruktor für ein neues Spiel
     public Game(String whitePlayerName, String blackPlayerName, FigureService figureService) {
@@ -64,7 +64,7 @@ public class Game {
         this.figureIds = savedFigures.stream().map(Figure::getId).toList();
     }
 
-    // --- Getter und Setter ---
+    // --- Getter & Setter ---
 
     public int getId() {
         return id;

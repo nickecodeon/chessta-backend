@@ -15,11 +15,6 @@ public class Queen extends Figure {
         super(row, column, isWhite);
     }
 
-    // Konstruktor für geladene Figuren
-    public Queen(int id, int row, int column, boolean isWhite, boolean isCaptured) {
-        super(id, row, column, isWhite, isCaptured);
-    }
-
     @Override
     public boolean isValidMove(int row, int column) {
         int rowDiff = Math.abs(row - getBoard_row());

@@ -15,11 +15,6 @@ public class Pawn extends Figure {
         super(row, column, isWhite);
     }
 
-    // Konstruktor für geladene Bauern
-    public Pawn(int id, int row, int column, boolean isWhite, boolean isCaptured) {
-        super(id, row, column, isWhite, isCaptured);
-    }
-
     @Override
     public boolean isValidMove(int row, int column) {
         int colDiff = Math.abs(column - getBoard_column());

@@ -1,8 +1,10 @@
 package org.example.chessta.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.chessta.dto.FigureDTO;
 import org.example.chessta.dto.GameDTO;
-import org.example.chessta.model.gameModels.Figure;
+import org.example.chessta.dto.MoveDTO;
+import org.example.chessta.dto.MoveResponseDTO;
 import org.example.chessta.model.gameModels.Game;
 import org.example.chessta.service.GameService;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,8 @@ public class GameController {
     @PostMapping("/new")
     public ResponseEntity<GameDTO> createNewGame(@RequestParam String whitePlayerName, @RequestParam String blackPlayerName) {
         Game game = gameService.createNewGame(whitePlayerName, blackPlayerName);
-        return ResponseEntity.ok(GameDTO.fromEntity(game));
+        List<FigureDTO> figures= gameService.getFigureDTOsInGame(game.getId());
+        return ResponseEntity.ok(GameDTO.fromEntity(game, figures));
     }
 
     // Lade ein Spiel anhand der ID
@@ -32,7 +35,8 @@ public class GameController {
     public ResponseEntity<GameDTO> loadGame(@PathVariable int id) {
         Game game = gameService.loadGame(id);
         if (game != null) {
-            return ResponseEntity.ok(GameDTO.fromEntity(game));
+            List<FigureDTO> figures = gameService.getFigureDTOsInGame(game.getId());
+            return ResponseEntity.ok(GameDTO.fromEntity(game, figures));
         }
         return ResponseEntity.notFound().build();
     }
@@ -40,35 +44,44 @@ public class GameController {
     // Lade alle Figuren eines Spiels
     @GetMapping("/{id}/figures")
     public ResponseEntity<List<FigureDTO>> getFigures(@PathVariable int id) {
-        List<Figure> figures = gameService.getFiguresInGame(id);
+        List<FigureDTO> figures = gameService.getFigureDTOsInGame(id);
         if (figures != null) {
-            return ResponseEntity.ok(FigureDTO.fromEntity(figures));
+            return ResponseEntity.ok(figures);
         }
         return ResponseEntity.notFound().build();
     }
 
     // Führe einen Zug aus
     @PostMapping("/{id}/move")
-    public ResponseEntity<String> makeMove(
+    public ResponseEntity<MoveResponseDTO> makeMove(
             @PathVariable int id,
-            @RequestParam int fromRow,
-            @RequestParam int fromCol,
-            @RequestParam int toRow,
-            @RequestParam int toCol
+            @RequestBody MoveDTO moveDTO
     ) {
-        boolean moveSuccessful = gameService.executeMove(id, fromRow, fromCol, toRow, toCol);
+        boolean moveSuccessful = gameService.executeMove(id, moveDTO);
         if (moveSuccessful) {
-            return ResponseEntity.ok("Zug erfolgreich ausgeführt!");
+            List<FigureDTO> figures = gameService.getFigureDTOsInGame(id);
+
+            MoveResponseDTO response = new MoveResponseDTO(
+                    true,
+                    "Zug erfolgreich ausgeführt!",
+                    figures
+            );
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.badRequest().body("Ungültiger Zug.");
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MoveResponseDTO(false, "Ungültiger Zug."));
         }
     }
 
     // Liste aller Spiele
     @GetMapping
-    public ResponseEntity<List<Game>> getAllGames() {
-        List<Game> games = gameService.getAllGames();
-        return ResponseEntity.ok(games);
+    public ResponseEntity<List<GameDTO>> getAllGames() {
+        List<GameDTO> gameDTOs = gameService.getAllGames().stream()
+                .map(game -> GameDTO.fromEntity(game, gameService.getFigureDTOsInGame(game.getId())))
+                .toList();
+
+        return ResponseEntity.ok(gameDTOs);
     }
 
     // Spiel löschen

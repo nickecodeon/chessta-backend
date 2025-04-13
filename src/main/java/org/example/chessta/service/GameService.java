@@ -1,5 +1,7 @@
 package org.example.chessta.service;
 
+import org.example.chessta.dto.FigureDTO;
+import org.example.chessta.dto.MoveDTO;
 import org.example.chessta.repository.*;
 import org.example.chessta.model.gameModels.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,23 +55,23 @@ public class GameService {
         }
     }
 
-    public boolean executeMove(int gameId, int fromRow, int fromCol, int toRow, int toCol) {
+    public boolean executeMove(int gameId, MoveDTO moveDTO) {
         // Lade das Spiel
         Game game = loadGame(gameId);
 
         // Finde die Figur an der Startposition
-        Figure movingFigure = figureService.findFigureAtPosition(game, fromRow, fromCol);
+        Figure movingFigure = figureService.findFigureAtPosition(game, moveDTO.getFromRow(), moveDTO.getFromCol());
         if (movingFigure == null) {
             return false;
         }
 
         // Validierung des Zugs
-        if (!movingFigure.isValidMove(toRow, toCol)) {
+        if (!movingFigure.isValidMove(moveDTO.getToRow(), moveDTO.getToCol())) {
             return false;
         }
 
         // Finde die Figur an der Zielposition
-        Figure targetFigure = figureService.findFigureAtPosition(game, toRow, toCol);
+        Figure targetFigure = figureService.findFigureAtPosition(game, moveDTO.getToRow(), moveDTO.getToCol());
 
         // Entferne geschlagene Figuren
         if (targetFigure != null && targetFigure.isWhite() != movingFigure.isWhite()) {
@@ -77,10 +79,10 @@ public class GameService {
         }
 
         // Aktualisiere die Position der Figur
-        figureService.moveFigure(movingFigure, toRow, toCol);
+        figureService.moveFigure(movingFigure, moveDTO.getToRow(), moveDTO.getToCol());
 
         // Speichere den Move
-        moveService.createMove(movingFigure, toRow, toCol, targetFigure != null, game);
+        moveService.createMove(movingFigure, moveDTO.getToRow(), moveDTO.getToCol(), targetFigure != null, game);
 
         // Aktualisiere den Spielzug
         game.setCurrentPlayer(game.getCurrentPlayer() == game.getWhitePlayer() ? game.getBlackPlayer() : game.getWhitePlayer());
@@ -94,6 +96,11 @@ public class GameService {
     public List<Figure> getFiguresInGame(int gameId) {
         Game game = loadGame(gameId);
         return figureService.getFiguresByGame(game);
+    }
+
+    public List<FigureDTO> getFigureDTOsInGame(int gameId) {
+        List<Figure> figures = getFiguresInGame(gameId);
+        return FigureDTO.fromEntity(figures);
     }
 
 }

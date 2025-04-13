@@ -10,16 +10,12 @@ public class MoveDTO {
     private int fromCol;
     private int toRow;
     private int toCol;
-    private boolean isCapture;
-    private String figureType;
 
-    public MoveDTO (int fromRow, int fromCol, int toRow, int toCol, boolean isCapture, String figureType) {
+    public MoveDTO (int fromRow, int fromCol, int toRow, int toCol) {
         this.fromRow = fromRow;
         this.fromCol = fromCol;
         this.toRow = toRow;
         this.toCol = toCol;
-        this.isCapture = isCapture;
-        this.figureType = figureType;
     }
 
     public static MoveDTO fromEntity(Move move) {
@@ -27,9 +23,7 @@ public class MoveDTO {
                 move.getFromRow(),
                 move.getFromCol(),
                 move.getToRow(),
-                move.getToCol(),
-                move.isCapture(),
-                move.getFigureType()
+                move.getToCol()
         );
     }
 
@@ -73,21 +67,5 @@ public class MoveDTO {
 
     public void setToCol(int toCol) {
         this.toCol = toCol;
-    }
-
-    public boolean isCapture() {
-        return isCapture;
-    }
-
-    public void setCapture(boolean capture) {
-        isCapture = capture;
-    }
-
-    public String getFigureType() {
-        return figureType;
-    }
-
-    public void setFigureType(String figureType) {
-        this.figureType = figureType;
     }
 }

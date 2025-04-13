@@ -15,7 +15,8 @@ public class Player {
     @Column(nullable = false)
     private boolean isWhite;
 
-    // Standardkonstruktor (erforderlich für JPA)
+    // --- Konstruktoren ---
+
     protected Player() {}
 
     // Konstruktor für neue Spieler
@@ -24,7 +25,8 @@ public class Player {
         this.isWhite = isWhite;
     }
 
-    // Getter und Setter
+    // --- Getter & Setter ---
+
     public int getId() {
         return id;
     }
