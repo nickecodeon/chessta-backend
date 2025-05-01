@@ -29,7 +29,7 @@ public class FigureService {
 
     public Figure getFigureById(int figureId) {
         return figureRepository.findById(figureId)
-                .orElseThrow(() -> new RuntimeException("Figur mit ID " + figureId + " nicht gefunden."));
+                .orElseThrow(() -> new RuntimeException("Figure with ID: " + figureId + " not found."));
     }
 
     public Figure findFigureAtPosition(Game game, int row, int col) {

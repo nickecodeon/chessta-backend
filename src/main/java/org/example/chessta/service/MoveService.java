@@ -23,7 +23,7 @@ public class MoveService {
 
     public Move getMoveById(int moveId) {
         return moveRepository.findById(moveId)
-                .orElseThrow(() -> new RuntimeException("Move mit ID " + moveId + " nicht gefunden."));
+                .orElseThrow(() -> new RuntimeException("Move with ID: " + moveId + " not found."));
     }
 
     public List<Move> getAllMovesForGame(int gameId) {

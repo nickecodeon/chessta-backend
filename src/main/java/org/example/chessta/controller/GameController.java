@@ -1,6 +1,5 @@
 package org.example.chessta.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.chessta.dto.FigureDTO;
 import org.example.chessta.dto.GameDTO;
 import org.example.chessta.dto.MoveDTO;
@@ -43,7 +42,7 @@ public class GameController {
 
     // Lade alle Figuren eines Spiels
     @GetMapping("/{id}/figures")
-    public ResponseEntity<List<FigureDTO>> getFigures(@PathVariable int id) {
+    public ResponseEntity<List<FigureDTO>> getFiguresInGame(@PathVariable int id) {
         List<FigureDTO> figures = gameService.getFigureDTOsInGame(id);
         if (figures != null) {
             return ResponseEntity.ok(figures);
@@ -63,25 +62,25 @@ public class GameController {
 
             MoveResponseDTO response = new MoveResponseDTO(
                     true,
-                    "Zug erfolgreich ausgeführt!",
+                    "Move successfully executed.",
                     figures
             );
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity
                     .badRequest()
-                    .body(new MoveResponseDTO(false, "Ungültiger Zug."));
+                    .body(new MoveResponseDTO(false, "Invalid move."));
         }
     }
 
     // Liste aller Spiele
     @GetMapping
-    public ResponseEntity<List<GameDTO>> getAllGames() {
-        List<GameDTO> gameDTOs = gameService.getAllGames().stream()
-                .map(game -> GameDTO.fromEntity(game, gameService.getFigureDTOsInGame(game.getId())))
+    public ResponseEntity<List<Integer>> fetchAllGameIds() {
+        List<Integer> gameListDTO = gameService.getAllGames().stream()
+                .map(Game::getId)
                 .toList();
 
-        return ResponseEntity.ok(gameDTOs);
+        return ResponseEntity.ok(gameListDTO);
     }
 
     // Spiel löschen
@@ -89,7 +88,7 @@ public class GameController {
     public ResponseEntity<String> deleteGame(@PathVariable int id) {
         boolean deleted = gameService.deleteGame(id);
         if (deleted) {
-            return ResponseEntity.ok("Spiel erfolgreich gelöscht.");
+            return ResponseEntity.ok("Game with ID " + id + " successfully deleted.");
         } else {
             return ResponseEntity.notFound().build();
         }

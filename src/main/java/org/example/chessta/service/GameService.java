@@ -34,7 +34,7 @@ public class GameService {
 
     public Game loadGame(int gameId) {
         return gameRepository.findById(gameId)
-                .orElseThrow(() -> new RuntimeException("Spiel mit ID " + gameId + " nicht gefunden."));
+                .orElseThrow(() -> new RuntimeException("Game with ID: " + gameId + " not found."));
     }
 
     public List<Game> getAllGames() {
@@ -61,7 +61,7 @@ public class GameService {
 
         // Finde die Figur an der Startposition
         Figure movingFigure = figureService.findFigureAtPosition(game, moveDTO.getFromRow(), moveDTO.getFromCol());
-        if (movingFigure == null) {
+        if (movingFigure == null || movingFigure.isWhite() != game.getCurrentPlayer().isWhite()) {
             return false;
         }
 
@@ -88,7 +88,7 @@ public class GameService {
         game.setCurrentPlayer(game.getCurrentPlayer() == game.getWhitePlayer() ? game.getBlackPlayer() : game.getWhitePlayer());
         gameRepository.save(game);
 
-        System.out.println("Zug erfolgreich ausgeführt!");
+        System.out.println("Move successfully executed.");
         return true;
     }
 

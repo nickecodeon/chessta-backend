@@ -12,10 +12,10 @@ public abstract class Figure {
     private int id;
 
     @Column(nullable = false)
-    private int board_row; // 1-8
+    private int board_row; // 0-7
 
     @Column(nullable = false)
-    private int board_column; // 1-8 (a-h entspricht 1-8)
+    private int board_column; // 0-7 (a-h entspricht 0-7)
 
     @Column(nullable = false)
     private boolean isWhite;
@@ -42,15 +42,15 @@ public abstract class Figure {
     // --- Getter & Setter ---
 
     public void setBoard_row(int row) {
-        if (row < 1 || row > 8) {
-            throw new IllegalArgumentException("Row must be between 1 and 8.");
+        if (row < 0 || row > 7) {
+            throw new IllegalArgumentException("Row must be between 0 and 7.");
         }
         this.board_row = row;
     }
 
     public void setBoard_column(int column) {
-        if (column < 1 || column > 8) {
-            throw new IllegalArgumentException("Column must be between 1 and 8.");
+        if (column < 0 || column > 7) {
+            throw new IllegalArgumentException("Column must be between 0 and 7.");
         }
         this.board_column = column;
     }

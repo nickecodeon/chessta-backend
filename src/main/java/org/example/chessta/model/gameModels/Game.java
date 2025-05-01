@@ -47,20 +47,20 @@ public class Game {
 
     public void initializeBoard(FigureService figureService) {
         List<Figure> figures = new ArrayList<>(List.of(
-                new Rook(1, 1, true), new Knight(1, 2, true), new Bishop(1, 3, true),
-                new Queen(1, 4, true), new King(1, 5, true), new Bishop(1, 6, true),
-                new Knight(1, 7, true), new Rook(1, 8, true),
-                new Rook(8, 1, false), new Knight(8, 2, false), new Bishop(8, 3, false),
-                new Queen(8, 4, false), new King(8, 5, false), new Bishop(8, 6, false),
-                new Knight(8, 7, false), new Rook(8, 8, false)
+                new Rook(0, 0, true), new Knight(0, 1, true), new Bishop(0, 2, true),
+                new Queen(0, 3, true), new King(0, 4, true), new Bishop(0, 5, true),
+                new Knight(0, 6, true), new Rook(0, 7, true),
+                new Rook(7, 0, false), new Knight(7, 1, false), new Bishop(7, 2, false),
+                new Queen(7, 3, false), new King(7, 4, false), new Bishop(7, 5, false),
+                new Knight(7, 6, false), new Rook(7, 7, false)
         ));
 
-        for (int col = 1; col <= 8; col++) {
-            figures.add(new Pawn(2, col, true));
-            figures.add(new Pawn(7, col, false));
+        for (int col = 0; col < 8; col++) {
+            figures.add(new Pawn(1, col, true));  // Weiße Bauern in Reihe 1 (zweite Zeile)
+            figures.add(new Pawn(6, col, false)); // Schwarze Bauern in Reihe 6 (vorletzte Zeile)
         }
 
-        List<Figure> savedFigures = figureService.saveFigures(figures);  // Speichert alle auf einmal
+        List<Figure> savedFigures = figureService.saveFigures(figures);
         this.figureIds = savedFigures.stream().map(Figure::getId).toList();
     }
 
