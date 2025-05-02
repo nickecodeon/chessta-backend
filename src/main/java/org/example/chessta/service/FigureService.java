@@ -6,7 +6,6 @@ import org.example.chessta.repository.FigureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,7 +31,7 @@ public class FigureService {
                 .orElseThrow(() -> new RuntimeException("Figure with ID: " + figureId + " not found."));
     }
 
-    public Figure findFigureAtPosition(Game game, int row, int col) {
+    public Figure getFigureAtPosition(Game game, int row, int col) {
         List<Integer> figureIds = game.getFigureIds();
 
         for (Integer figureId : figureIds) {
@@ -44,6 +43,24 @@ public class FigureService {
         }
 
         return null;
+    }
+
+    public boolean isPathClear(Game game, int fromRow, int fromCol, int toRow, int toCol) {
+        int rowStep = Integer.compare(toRow, fromRow);
+        int colStep = Integer.compare(toCol, fromCol);
+
+        int currentRow = fromRow + rowStep;
+        int currentCol = fromCol + colStep;
+
+        while (currentRow != toRow || currentCol != toCol) {
+            if (getFigureAtPosition(game, currentRow, currentCol) != null) {
+                return false;
+            }
+            currentRow += rowStep;
+            currentCol += colStep;
+        }
+
+        return true;
     }
 
     public void captureFigure(Figure figure) {

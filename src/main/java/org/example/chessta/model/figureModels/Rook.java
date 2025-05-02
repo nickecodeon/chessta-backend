@@ -16,7 +16,7 @@ public class Rook extends Figure {
     }
 
     @Override
-    public boolean isValidMove(int row, int column) {
+    public boolean isValidMove(int row, int column, boolean isCapture) {
         int rowDiff = Math.abs(row - getBoard_row());
         int colDiff = Math.abs(column - getBoard_column());
 

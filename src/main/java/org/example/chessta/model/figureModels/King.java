@@ -10,14 +10,14 @@ public class King extends Figure {
     public King() {
     }
 
-    public King(int row, int col, boolean isWhite) {
-        super(row, col, isWhite);
+    public King(int row, int column, boolean isWhite) {
+        super(row, column, isWhite);
     }
 
     @Override
-    public boolean isValidMove(int row, int col) {
+    public boolean isValidMove(int row, int column, boolean isCapture) {
         int rowDiff = Math.abs(row - getBoard_row());
-        int colDiff = Math.abs(col - getBoard_column());
+        int colDiff = Math.abs(column - getBoard_column());
 
         return rowDiff <= 1 && colDiff <= 1;
     }

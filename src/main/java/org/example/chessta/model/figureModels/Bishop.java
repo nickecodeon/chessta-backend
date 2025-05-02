@@ -10,14 +10,14 @@ public class Bishop extends Figure {
     public Bishop() {
     }
 
-    public Bishop(int row, int col, boolean isWhite) {
-        super(row, col, isWhite);
+    public Bishop(int row, int column, boolean isWhite) {
+        super(row, column, isWhite);
     }
 
     @Override
-    public boolean isValidMove(int row, int col) {
+    public boolean isValidMove(int row, int column, boolean isCapture) {
         int rowDiff = Math.abs(row - getBoard_row());
-        int colDiff = Math.abs(col - getBoard_column());
+        int colDiff = Math.abs(column - getBoard_column());
 
         return rowDiff == colDiff;
     }

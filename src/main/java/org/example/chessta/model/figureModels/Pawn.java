@@ -16,40 +16,26 @@ public class Pawn extends Figure {
     }
 
     @Override
-    public boolean isValidMove(int row, int column) {
-        int colDiff = Math.abs(column - getBoard_column());
+    public boolean isValidMove(int row, int column, boolean isCapture) {
         int rowDiff = row - getBoard_row();
+        int colDiff = Math.abs(column - getBoard_column());
 
         if (isWhite()) {
-            // Weißer Bauer kann nur vorwärts ziehen
-            if (colDiff == 0 && rowDiff == 1) {
-                return true; // Ein Feld vorwärts
+            if (isCapture) {
+                return rowDiff == 1 && colDiff == 1;
+            } else {
+                if (colDiff != 0) return false;
+                if (rowDiff == 1) return true;
+                return rowDiff == 2 && getBoard_row() == 2;
             }
-
-            if (colDiff == 0 && rowDiff == 2 && getBoard_row() == 2) {
-                return true; // Zwei Felder vorwärts aus der Grundstellung
-            }
-            /*
-            if (colDiff == 1 && rowDiff == 1) {
-                return true; // Diagonaler Zug zum Schlagen
-            }
-             */
         } else {
-            // Schwarzer Bauer kann nur rückwärts ziehen
-            if (colDiff == 0 && rowDiff == -1) {
-                return true; // Ein Feld rückwärts
+            if (isCapture) {
+                return rowDiff == -1 && colDiff == 1;
+            } else {
+                if (colDiff != 0) return false;
+                if (rowDiff == -1) return true;
+                return rowDiff == -2 && getBoard_row() == 7;
             }
-
-            if (colDiff == 0 && rowDiff == -2 && getBoard_row() == 7) {
-                return true; // Zwei Felder rückwärts aus der Grundstellung
-            }
-
-            /*
-            if (colDiff == 1 && rowDiff == -1) {
-                return true; // Diagonaler Zug zum Schlagen
-            }
-             */
         }
-        return false;
     }
 }

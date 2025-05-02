@@ -1,6 +1,7 @@
 package org.example.chessta.model.gameModels;
 
 import jakarta.persistence.*;
+import org.example.chessta.model.figureModels.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -37,7 +38,7 @@ public abstract class Figure {
 
     // --- Methoden ---
 
-    public abstract boolean isValidMove(int row, int column);
+    public abstract boolean isValidMove(int row, int column, boolean isCapture);
 
     // --- Getter & Setter ---
 
@@ -53,6 +54,10 @@ public abstract class Figure {
             throw new IllegalArgumentException("Column must be between 0 and 7.");
         }
         this.board_column = column;
+    }
+
+    public boolean requiresClearPath() {
+        return this instanceof Bishop || this instanceof Rook || this instanceof Queen;
     }
 
     public void setColor(boolean white) {
