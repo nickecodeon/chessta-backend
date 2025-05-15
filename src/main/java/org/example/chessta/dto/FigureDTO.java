@@ -58,11 +58,11 @@ public class FigureDTO {
         return col;
     }
 
-    public boolean isWhite() {
+    public boolean getIsWhite() {
         return isWhite;
     }
 
-    public boolean isCaptured() {
+    public boolean getIsCaptured() {
         return isCaptured;
     }
 
@@ -82,11 +82,11 @@ public class FigureDTO {
         this.col = col;
     }
 
-    public void setWhite(boolean white) {
+    public void setIsWhite(boolean white) {
         this.isWhite = white;
     }
 
-    public void setCaptured(boolean captured) {
+    public void setIsCaptured(boolean captured) {
         this.isCaptured = captured;
     }
 }
