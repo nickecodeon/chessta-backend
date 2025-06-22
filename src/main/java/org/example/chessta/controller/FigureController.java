@@ -6,6 +6,8 @@ import org.example.chessta.service.FigureService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/figures")
 public class FigureController {
@@ -17,7 +19,7 @@ public class FigureController {
 
     // Lade eine Figur anhand der ID
     @GetMapping("/{id}")
-    public ResponseEntity<FigureDTO> getFigureById(@PathVariable int id) {
+    public ResponseEntity<FigureDTO> getFigureById(@PathVariable UUID id) {
         Figure figure = figureService.getFigureById(id);
 
         if (figure != null) {

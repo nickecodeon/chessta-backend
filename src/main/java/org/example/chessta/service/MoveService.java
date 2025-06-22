@@ -7,6 +7,7 @@ import org.example.chessta.repository.MoveRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class MoveService {
@@ -21,16 +22,16 @@ public class MoveService {
         moveRepository.save(move);
     }
 
-    public Move getMoveById(int moveId) {
+    public Move getMoveById(UUID moveId) {
         return moveRepository.findById(moveId)
                 .orElseThrow(() -> new RuntimeException("Move with ID: " + moveId + " not found."));
     }
 
-    public List<Move> getAllMovesForGame(int gameId) {
+    public List<Move> getAllMovesForGame(UUID gameId) {
         return moveRepository.findByGameId(gameId);
     }
 
-    public void deleteMovesForGame(int gameId) {
+    public void deleteMovesForGame(UUID gameId) {
         List<Move> moves = moveRepository.findByGameId(gameId);
         moveRepository.deleteAll(moves);
     }

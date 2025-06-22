@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class FigureService {
@@ -26,15 +27,15 @@ public class FigureService {
         return figureRepository.saveAll(figures);
     }
 
-    public Figure getFigureById(int figureId) {
+    public Figure getFigureById(UUID figureId) {
         return figureRepository.findById(figureId)
                 .orElseThrow(() -> new RuntimeException("Figure with ID: " + figureId + " not found."));
     }
 
     public Figure getFigureAtPosition(Game game, int row, int col) {
-        List<Integer> figureIds = game.getFigureIds();
+        List<UUID> figureIds = game.getFigureIds();
 
-        for (Integer figureId : figureIds) {
+        for (UUID figureId : figureIds) {
             Figure figure = figureRepository.findById(figureId).orElse(null);
 
             if (figure != null && figure.getBoard_row() == row && figure.getBoard_column() == col) {
@@ -78,7 +79,7 @@ public class FigureService {
         return figureRepository.findAllById(game.getFigureIds());
     }
 
-    public void deleteFigureById(int figureId) {
+    public void deleteFigureById(UUID figureId) {
         figureRepository.deleteById(figureId);
     }
 }

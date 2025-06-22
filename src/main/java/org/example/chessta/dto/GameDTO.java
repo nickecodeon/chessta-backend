@@ -3,15 +3,16 @@ package org.example.chessta.dto;
 import org.example.chessta.model.gameModels.Game;
 
 import java.util.List;
+import java.util.UUID;
 
 public class GameDTO {
-    private int id;
+    private UUID id;
     private String whitePlayer;
     private String blackPlayer;
     private String currentPlayer;
     private List<FigureDTO> figures;
 
-    public GameDTO(int id, String whitePlayer, String blackPlayer, String currentPlayer, List<FigureDTO> figures) {
+    public GameDTO(UUID id, String whitePlayer, String blackPlayer, String currentPlayer, List<FigureDTO> figures) {
         this.id = id;
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
@@ -30,7 +31,7 @@ public class GameDTO {
     }
 
     // Getter & Setter
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -50,7 +51,7 @@ public class GameDTO {
         return figures;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

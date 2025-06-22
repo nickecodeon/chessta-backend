@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class GameService {
@@ -32,7 +33,7 @@ public class GameService {
         return gameRepository.save(game);
     }
 
-    public Game loadGame(int gameId) {
+    public Game loadGame(UUID gameId) {
         return gameRepository.findById(gameId)
                 .orElseThrow(() -> new RuntimeException("Game with ID: " + gameId + " not found."));
     }
@@ -41,21 +42,21 @@ public class GameService {
         return gameRepository.findAll();
     }
 
-    public boolean deleteGame(int gameId) {
+    public boolean deleteGame(UUID gameId) {
         deleteFiguresFromGame(gameId);
         moveService.deleteMovesForGame(gameId);
         gameRepository.deleteById(gameId);
         return !gameRepository.existsById(gameId);
     }
 
-    public void deleteFiguresFromGame(int gameId) {
+    public void deleteFiguresFromGame(UUID gameId) {
         List<Figure> figures = getFiguresInGame(gameId);
         for (Figure figure : figures) {
             figureService.deleteFigureById(figure.getId());
         }
     }
 
-    public boolean executeMove(int gameId, MoveDTO moveDTO) {
+    public boolean executeMove(UUID gameId, MoveDTO moveDTO) {
         Game game = loadGame(gameId);
 
         Figure movingFigure = figureService.getFigureAtPosition(game, moveDTO.getFromRow(), moveDTO.getFromCol());
@@ -95,12 +96,12 @@ public class GameService {
     }
 
 
-    public List<Figure> getFiguresInGame(int gameId) {
+    public List<Figure> getFiguresInGame(UUID gameId) {
         Game game = loadGame(gameId);
         return figureService.getFiguresByGame(game);
     }
 
-    public List<FigureDTO> getFigureDTOsInGame(int gameId) {
+    public List<FigureDTO> getFigureDTOsInGame(UUID gameId) {
         List<Figure> figures = getFiguresInGame(gameId);
         return FigureDTO.fromEntity(figures);
     }

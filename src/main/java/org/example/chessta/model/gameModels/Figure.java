@@ -2,6 +2,9 @@ package org.example.chessta.model.gameModels;
 
 import jakarta.persistence.*;
 import org.example.chessta.model.figureModels.*;
+import org.hibernate.annotations.GenericGenerator;
+
+import java.util.UUID;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -9,8 +12,10 @@ import org.example.chessta.model.figureModels.*;
 public abstract class Figure {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @Column(nullable = false)
     private int board_row; // 0-7
@@ -72,11 +77,11 @@ public abstract class Figure {
         this.isCaptured = false;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 

@@ -3,16 +3,20 @@ package org.example.chessta.model.gameModels;
 import jakarta.persistence.*;
 import org.example.chessta.model.figureModels.*;
 import org.example.chessta.service.FigureService;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class Game {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "white_player_id", nullable = false)
@@ -29,7 +33,7 @@ public class Game {
     @ElementCollection
     @CollectionTable(name = "game_figures", joinColumns = @JoinColumn(name = "game_id"))
     @Column(name = "figure_id")
-    private List<Integer> figureIds = new ArrayList<>();
+    private List<UUID> figureIds = new ArrayList<>();
 
     // --- Konstruktoren ---
 
@@ -66,7 +70,7 @@ public class Game {
 
     // --- Getter & Setter ---
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -82,11 +86,11 @@ public class Game {
         return currentPlayer;
     }
 
-    public List<Integer> getFigureIds() {
+    public List<UUID> getFigureIds() {
         return figureIds;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -102,7 +106,7 @@ public class Game {
         this.currentPlayer = currentPlayer;
     }
 
-    public void setFigureIds(List<Integer> figureIds) {
+    public void setFigureIds(List<UUID> figureIds) {
         this.figureIds = figureIds;
     }
 }

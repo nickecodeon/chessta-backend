@@ -5,8 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface MoveRepository extends JpaRepository<Move, Integer> {
-    List<Move> findByGameId(int gameId);
+public interface MoveRepository extends JpaRepository<Move, UUID> {
+    List<Move> findByGameId(UUID gameId);
 }

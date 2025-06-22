@@ -16,4 +16,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("mysql:mysql-connector-java:8.0.33")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("org.postgresql:postgresql:42.7.3")
+    implementation("org.hibernate.orm:hibernate-core:6.4.0.Final")
 }

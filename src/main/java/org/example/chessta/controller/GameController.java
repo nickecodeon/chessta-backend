@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/games")
@@ -31,7 +32,7 @@ public class GameController {
 
     // Lade ein Spiel anhand der ID
     @GetMapping("/{id}")
-    public ResponseEntity<GameDTO> loadGame(@PathVariable int id) {
+    public ResponseEntity<GameDTO> loadGame(@PathVariable UUID id) {
         Game game = gameService.loadGame(id);
         if (game != null) {
             List<FigureDTO> figures = gameService.getFigureDTOsInGame(game.getId());
@@ -42,7 +43,7 @@ public class GameController {
 
     // Lade alle Figuren eines Spiels
     @GetMapping("/{id}/figures")
-    public ResponseEntity<List<FigureDTO>> getFiguresInGame(@PathVariable int id) {
+    public ResponseEntity<List<FigureDTO>> getFiguresInGame(@PathVariable UUID id) {
         List<FigureDTO> figures = gameService.getFigureDTOsInGame(id);
         if (figures != null) {
             return ResponseEntity.ok(figures);
@@ -53,7 +54,7 @@ public class GameController {
     // Führe einen Zug aus
     @PostMapping("/{id}/move")
     public ResponseEntity<MoveResponseDTO> makeMove(
-            @PathVariable int id,
+            @PathVariable UUID id,
             @RequestBody MoveDTO moveDTO
     ) {
         boolean moveSuccessful = gameService.executeMove(id, moveDTO);
@@ -75,8 +76,8 @@ public class GameController {
 
     // Liste aller Spiele
     @GetMapping
-    public ResponseEntity<List<Integer>> fetchAllGameIds() {
-        List<Integer> gameListDTO = gameService.getAllGames().stream()
+    public ResponseEntity<List<UUID>> fetchAllGameIds() {
+        List<UUID> gameListDTO = gameService.getAllGames().stream()
                 .map(Game::getId)
                 .toList();
 
@@ -85,7 +86,7 @@ public class GameController {
 
     // Spiel löschen
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteGame(@PathVariable int id) {
+    public ResponseEntity<String> deleteGame(@PathVariable UUID id) {
         boolean deleted = gameService.deleteGame(id);
         if (deleted) {
             return ResponseEntity.ok("Game with ID " + id + " successfully deleted.");

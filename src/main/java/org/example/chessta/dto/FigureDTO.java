@@ -4,16 +4,17 @@ import org.example.chessta.model.gameModels.Figure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class FigureDTO {
-    private int id;
+    private UUID id;
     private String type;
     private int row;
     private int col;
     private boolean isWhite;
     private boolean isCaptured;
 
-    public FigureDTO(int id, String type, int row, int col, boolean isWhite, boolean isCaptured) {
+    public FigureDTO(UUID id, String type, int row, int col, boolean isWhite, boolean isCaptured) {
         this.id = id;
         this.type = type;
         this.row = row;
@@ -42,7 +43,7 @@ public class FigureDTO {
     }
 
     // --- Getter & Setter ---
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -66,7 +67,7 @@ public class FigureDTO {
         return isCaptured;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
