@@ -3,7 +3,6 @@ package org.example.chessta.model.gameModels;
 import jakarta.persistence.*;
 import org.example.chessta.model.figureModels.*;
 import org.example.chessta.service.FigureService;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,6 @@ public class Game {
 
     @Id
     @GeneratedValue
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -34,6 +32,8 @@ public class Game {
     @CollectionTable(name = "game_figures", joinColumns = @JoinColumn(name = "game_id"))
     @Column(name = "figure_id")
     private List<UUID> figureIds = new ArrayList<>();
+
+    private int moveCount = 0;
 
     // --- Konstruktoren ---
 
@@ -70,43 +70,63 @@ public class Game {
 
     // --- Getter & Setter ---
 
+    @SuppressWarnings("unused")
     public UUID getId() {
         return id;
     }
 
+    @SuppressWarnings("unused")
     public Player getWhitePlayer() {
         return whitePlayer;
     }
 
+    @SuppressWarnings("unused")
     public Player getBlackPlayer() {
         return blackPlayer;
     }
 
+    @SuppressWarnings("unused")
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+    @SuppressWarnings("unused")
     public List<UUID> getFigureIds() {
         return figureIds;
     }
 
+    @SuppressWarnings("unused")
+    public int getMoveCount() {
+        return moveCount;
+    }
+
+    @SuppressWarnings("unused")
     public void setId(UUID id) {
         this.id = id;
     }
 
+    @SuppressWarnings("unused")
     public void setWhitePlayer(Player whitePlayer) {
         this.whitePlayer = whitePlayer;
     }
 
+    @SuppressWarnings("unused")
     public void setBlackPlayer(Player blackPlayer) {
         this.blackPlayer = blackPlayer;
     }
 
+    @SuppressWarnings("unused")
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
+    @SuppressWarnings("unused")
     public void setFigureIds(List<UUID> figureIds) {
         this.figureIds = figureIds;
+    }
+
+    @SuppressWarnings("unused")
+    public void setMoveCount(int moveCount) {
+        this.moveCount = moveCount;
     }
 }

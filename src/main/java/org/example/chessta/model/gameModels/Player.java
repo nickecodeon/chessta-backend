@@ -1,7 +1,6 @@
 package org.example.chessta.model.gameModels;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
@@ -10,7 +9,6 @@ public class Player {
 
     @Id
     @GeneratedValue
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -32,26 +30,32 @@ public class Player {
 
     // --- Getter & Setter ---
 
+    @SuppressWarnings("unused")
     public UUID getId() {
         return id;
     }
 
+    @SuppressWarnings("unused")
     public void setId(UUID id) {
         this.id = id;
     }
 
+    @SuppressWarnings("unused")
     public String getName() {
         return name;
     }
 
+    @SuppressWarnings("unused")
     public void setName(String name) {
         this.name = name;
     }
 
+    @SuppressWarnings("unused")
     public boolean isWhite() {
         return isWhite;
     }
 
+    @SuppressWarnings("unused")
     public void setWhite(boolean isWhite) {
         this.isWhite = isWhite;
     }

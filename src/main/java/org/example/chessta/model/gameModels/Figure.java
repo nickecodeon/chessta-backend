@@ -2,7 +2,6 @@ package org.example.chessta.model.gameModels;
 
 import jakarta.persistence.*;
 import org.example.chessta.model.figureModels.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
@@ -13,7 +12,6 @@ public abstract class Figure {
 
     @Id
     @GeneratedValue
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -71,10 +69,6 @@ public abstract class Figure {
 
     public void setCaptured(boolean captured) {
         this.isCaptured = captured;
-    }
-
-    public void unsetCaptured() {
-        this.isCaptured = false;
     }
 
     public void setId(UUID id) {

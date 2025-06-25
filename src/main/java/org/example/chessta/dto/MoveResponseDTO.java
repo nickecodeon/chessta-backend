@@ -9,9 +9,6 @@ public class MoveResponseDTO {
 
     // --- Konstruktoren
 
-    public MoveResponseDTO() {
-    }
-
     public MoveResponseDTO(boolean success, String message) {
         this.success = success;
         this.message = message;
@@ -25,26 +22,32 @@ public class MoveResponseDTO {
 
     // --- Getter & Setter ---
 
+    @SuppressWarnings("unused")
     public boolean isSuccess() {
         return success;
     }
 
+    @SuppressWarnings("unused")
     public void setSuccess(boolean success) {
         this.success = success;
     }
 
+    @SuppressWarnings("unused")
     public String getMessage() {
         return message;
     }
 
+    @SuppressWarnings("unused")
     public void setMessage(String message) {
         this.message = message;
     }
 
+    @SuppressWarnings("unused")
     public List<FigureDTO> getUpdatedFigures() {
         return updatedFigures;
     }
 
+    @SuppressWarnings("unused")
     public void setUpdatedFigures(List<FigureDTO> updatedFigures) {
         this.updatedFigures = updatedFigures;
     }

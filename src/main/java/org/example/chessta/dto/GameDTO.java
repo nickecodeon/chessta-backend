@@ -11,13 +11,15 @@ public class GameDTO {
     private String blackPlayer;
     private String currentPlayer;
     private List<FigureDTO> figures;
+    private int moveCount;
 
-    public GameDTO(UUID id, String whitePlayer, String blackPlayer, String currentPlayer, List<FigureDTO> figures) {
+    public GameDTO(UUID id, String whitePlayer, String blackPlayer, String currentPlayer, List<FigureDTO> figures, int moveCount) {
         this.id = id;
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         this.currentPlayer = currentPlayer;
         this.figures = figures;
+        this.moveCount = moveCount;
     }
 
     public static GameDTO fromEntity(Game game, List<FigureDTO> figures) {
@@ -26,48 +28,70 @@ public class GameDTO {
                 game.getWhitePlayer().getName(),
                 game.getBlackPlayer().getName(),
                 game.getCurrentPlayer().getName(),
-                figures
+                figures,
+                game.getMoveCount()
         );
     }
 
     // Getter & Setter
+
+    @SuppressWarnings("unused")
     public UUID getId() {
         return id;
     }
 
+    @SuppressWarnings("unused")
     public String getWhitePlayer() {
         return whitePlayer;
     }
 
+    @SuppressWarnings("unused")
     public String getBlackPlayer() {
         return blackPlayer;
     }
 
+    @SuppressWarnings("unused")
     public String getCurrentPlayer() {
         return currentPlayer;
     }
 
+    @SuppressWarnings("unused")
     public List<FigureDTO> getFigures() {
         return figures;
     }
 
+    @SuppressWarnings("unused")
+    public int getMoveCount() {
+        return moveCount;
+    }
+
+    @SuppressWarnings("unused")
     public void setId(UUID id) {
         this.id = id;
     }
 
+    @SuppressWarnings("unused")
     public void setWhitePlayer(String whitePlayer) {
         this.whitePlayer = whitePlayer;
     }
 
+    @SuppressWarnings("unused")
     public void setBlackPlayer(String blackPlayer) {
         this.blackPlayer = blackPlayer;
     }
 
+    @SuppressWarnings("unused")
     public void setCurrentPlayer(String currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
+    @SuppressWarnings("unused")
     public void setFigures(List<FigureDTO> figures) {
         this.figures = figures;
+    }
+
+    @SuppressWarnings("unused")
+    public void setMoveCount(int moveCount) {
+        this.moveCount = moveCount;
     }
 }

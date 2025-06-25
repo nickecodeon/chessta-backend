@@ -4,7 +4,6 @@ import org.example.chessta.dto.FigureDTO;
 import org.example.chessta.dto.MoveDTO;
 import org.example.chessta.repository.*;
 import org.example.chessta.model.gameModels.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,14 +12,11 @@ import java.util.UUID;
 @Service
 public class GameService {
 
-    @Autowired
-    private GameRepository gameRepository;
+    private final GameRepository gameRepository;
 
-    @Autowired
-    private FigureService figureService;
+    private final FigureService figureService;
 
-    @Autowired
-    private MoveService moveService;
+    private final MoveService moveService;
 
     public GameService(GameRepository gameRepository, FigureService figureService, MoveService moveService) {
         this.gameRepository = gameRepository;
@@ -86,9 +82,20 @@ public class GameService {
         }
 
         figureService.moveFigure(movingFigure, moveDTO.getToRow(), moveDTO.getToCol());
-        moveService.createMove(movingFigure, moveDTO.getToRow(), moveDTO.getToCol(), targetFigure != null, game);
 
-        game.setCurrentPlayer(game.getCurrentPlayer() == game.getWhitePlayer() ? game.getBlackPlayer() : game.getWhitePlayer());
+        int inGameCount = game.getMoveCount();
+
+        moveService.createMove(movingFigure, moveDTO.getToRow(), moveDTO.getToCol(), targetFigure != null, game, inGameCount);
+
+        game.setMoveCount(inGameCount + 1);
+
+        game.setCurrentPlayer(
+                game.getCurrentPlayer() == game.getWhitePlayer()
+                        ? game.getBlackPlayer()
+                        : game.getWhitePlayer()
+        );
+
+        // neuen spielstand speichern
         gameRepository.save(game);
 
         System.out.println("Move successfully executed.");

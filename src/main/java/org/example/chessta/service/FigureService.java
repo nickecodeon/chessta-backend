@@ -3,7 +3,6 @@ package org.example.chessta.service;
 import org.example.chessta.model.gameModels.Figure;
 import org.example.chessta.model.gameModels.Game;
 import org.example.chessta.repository.FigureRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,15 +11,10 @@ import java.util.UUID;
 @Service
 public class FigureService {
 
-    @Autowired
-    private FigureRepository figureRepository;
+    private final FigureRepository figureRepository;
 
     public FigureService(FigureRepository figureRepository) {
         this.figureRepository = figureRepository;
-    }
-
-    public Figure saveFigure(Figure figure) {
-        return figureRepository.save(figure);
     }
 
     public List<Figure> saveFigures(List<Figure> figures) {

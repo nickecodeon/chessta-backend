@@ -2,9 +2,6 @@ package org.example.chessta.dto;
 
 import org.example.chessta.model.gameModels.Move;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MoveDTO {
     private int fromRow;
     private int fromCol;
@@ -27,44 +24,44 @@ public class MoveDTO {
         );
     }
 
-    public static List<MoveDTO> fromEntity(List<Move> moves) {
-        List<MoveDTO> moveDTOs = new ArrayList<>();
-        for (Move move : moves) {
-            moveDTOs.add(fromEntity(move));
-        }
-        return moveDTOs;
-    }
-
     // --- Getter & Setter ---
 
+    @SuppressWarnings("unused")
     public int getFromRow() {
         return fromRow;
     }
 
+    @SuppressWarnings("unused")
     public void setFromRow(int fromRow) {
         this.fromRow = fromRow;
     }
 
+    @SuppressWarnings("unused")
     public int getFromCol() {
         return fromCol;
     }
 
+    @SuppressWarnings("unused")
     public void setFromCol(int fromCol) {
         this.fromCol = fromCol;
     }
 
+    @SuppressWarnings("unused")
     public int getToRow() {
         return toRow;
     }
 
+    @SuppressWarnings("unused")
     public void setToRow(int toRow) {
         this.toRow = toRow;
     }
 
+    @SuppressWarnings("unused")
     public int getToCol() {
         return toCol;
     }
 
+    @SuppressWarnings("unused")
     public void setToCol(int toCol) {
         this.toCol = toCol;
     }

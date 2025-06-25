@@ -43,50 +43,63 @@ public class FigureDTO {
     }
 
     // --- Getter & Setter ---
+
+    @SuppressWarnings("unused")
     public UUID getId() {
         return id;
     }
 
+    @SuppressWarnings("unused")
     public String getType() {
         return type;
     }
 
+    @SuppressWarnings("unused")
     public int getRow() {
         return row;
     }
 
+    @SuppressWarnings("unused")
     public int getCol() {
         return col;
     }
 
+    @SuppressWarnings("unused")
     public boolean getIsWhite() {
         return isWhite;
     }
 
+    @SuppressWarnings("unused")
     public boolean getIsCaptured() {
         return isCaptured;
     }
 
+    @SuppressWarnings("unused")
     public void setId(UUID id) {
         this.id = id;
     }
 
+    @SuppressWarnings("unused")
     public void setType(String type) {
         this.type = type;
     }
 
+    @SuppressWarnings("unused")
     public void setRow(int row) {
         this.row = row;
     }
 
+    @SuppressWarnings("unused")
     public void setCol(int col) {
         this.col = col;
     }
 
+    @SuppressWarnings("unused")
     public void setIsWhite(boolean white) {
         this.isWhite = white;
     }
 
+    @SuppressWarnings("unused")
     public void setIsCaptured(boolean captured) {
         this.isCaptured = captured;
     }

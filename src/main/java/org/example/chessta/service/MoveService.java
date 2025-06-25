@@ -17,18 +17,17 @@ public class MoveService {
         this.moveRepository = moveRepository;
     }
 
-    public void createMove(Figure figure, int toRow, int toCol, boolean isCapture, Game game) {
-        Move move = new Move(figure.getBoard_row(), figure.getBoard_column(), toRow, toCol, isCapture, figure.getClass().getSimpleName(), figure, game);
+    public void createMove(Figure figure, int toRow, int toCol, boolean isCapture, Game game, int inGameCount) {
+        Move move = new Move(figure.getBoard_row(), figure.getBoard_column(),
+                toRow, toCol, isCapture, figure.getClass().getSimpleName(),
+                figure, game, inGameCount
+        );
         moveRepository.save(move);
     }
 
     public Move getMoveById(UUID moveId) {
         return moveRepository.findById(moveId)
                 .orElseThrow(() -> new RuntimeException("Move with ID: " + moveId + " not found."));
-    }
-
-    public List<Move> getAllMovesForGame(UUID gameId) {
-        return moveRepository.findByGameId(gameId);
     }
 
     public void deleteMovesForGame(UUID gameId) {
