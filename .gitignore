@@ -22,6 +22,9 @@ dist/
 *.iml
 *.ipr
 
+# Ignore config files with sensitive info
+src/main/resources/application.properties
+
 ### Eclipse ###
 .classpath
 .project
