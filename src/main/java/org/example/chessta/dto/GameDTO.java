@@ -12,14 +12,16 @@ public class GameDTO {
     private String currentPlayer;
     private List<FigureDTO> figures;
     private int moveCount;
+    private boolean finished;
 
-    public GameDTO(UUID id, String whitePlayer, String blackPlayer, String currentPlayer, List<FigureDTO> figures, int moveCount) {
+    public GameDTO(UUID id, String whitePlayer, String blackPlayer, String currentPlayer, List<FigureDTO> figures, int moveCount, boolean finished) {
         this.id = id;
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         this.currentPlayer = currentPlayer;
         this.figures = figures;
         this.moveCount = moveCount;
+        this.finished = finished;
     }
 
     public static GameDTO fromEntity(Game game, List<FigureDTO> figures) {
@@ -29,7 +31,8 @@ public class GameDTO {
                 game.getBlackPlayer().getName(),
                 game.getCurrentPlayer().getName(),
                 figures,
-                game.getMoveCount()
+                game.getMoveCount(),
+                game.getFinished()
         );
     }
 
@@ -93,5 +96,15 @@ public class GameDTO {
     @SuppressWarnings("unused")
     public void setMoveCount(int moveCount) {
         this.moveCount = moveCount;
+    }
+
+    @SuppressWarnings("unused")
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    @SuppressWarnings("unused")
+    public boolean getFinished() {
+        return finished;
     }
 }

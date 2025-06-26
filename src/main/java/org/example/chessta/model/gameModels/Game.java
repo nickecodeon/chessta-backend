@@ -35,11 +35,12 @@ public class Game {
 
     private int moveCount = 0;
 
+    private boolean finished = false;
+
     // --- Konstruktoren ---
 
     protected Game() {}
 
-    // Konstruktor für ein neues Spiel
     public Game(String whitePlayerName, String blackPlayerName, FigureService figureService) {
         this.whitePlayer = new Player(whitePlayerName, true);
         this.blackPlayer = new Player(blackPlayerName, false);
@@ -128,5 +129,15 @@ public class Game {
     @SuppressWarnings("unused")
     public void setMoveCount(int moveCount) {
         this.moveCount = moveCount;
+    }
+
+    @SuppressWarnings("unused")
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    @SuppressWarnings("unused")
+    public boolean getFinished() {
+        return finished;
     }
 }
