@@ -21,7 +21,7 @@ The nice little **Java** backend for the mobile chess application **chessta**. I
 ### Clone the Project
 
 ```bash
-git clone https://github.com/your-username/chessta-backend.git
+git clone https://github.com/nickecodeon/chessta-backend.git
 cd chessta-backend
 ```
 
