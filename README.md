@@ -1,8 +1,6 @@
-# chessta-backend ♟️
+# Chessta-Backend ♟️
 
 The nice little **Java** backend for the mobile chess application **chessta**. It is built with **Spring Boot** and uses **Hibernate (JPA)** for data persistence. The backend provides a RESTful API to manage chess games, handle moves, and store user and game state information in a relational database.
-
----
 
 ## Features 📦
 
@@ -12,8 +10,6 @@ The nice little **Java** backend for the mobile chess application **chessta**. I
 - Database integration with Hibernate (JPA)
 - RESTful API ready for mobile apps
 
----
-
 ## Getting Started 🚀
 
 ### Prerequisites
@@ -22,15 +18,12 @@ The nice little **Java** backend for the mobile chess application **chessta**. I
 - **Gradle**
 - **PostgreSQL** running locally (or adapt to your own DB config)
 
----
-
 ### Clone the Project
 
 ```bash
 git clone https://github.com/your-username/chessta-backend.git
 cd chessta-backend
 ```
- ---
 
  ### Configure the Database
 
@@ -48,8 +41,6 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 ```
 💡 You can switch to MySQL by changing the driver and dialect accordingly.
 
----
-
 ### Run the Application ▶️
 
 Start the backend using the Gradle wrapper:
@@ -65,8 +56,6 @@ The server will start at:
 ```
 http://localhost:8080
 ```
-
---- 
 
 ## Test the API 🧪
 
