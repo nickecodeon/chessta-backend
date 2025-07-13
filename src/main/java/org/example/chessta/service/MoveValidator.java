@@ -90,7 +90,7 @@ public class MoveValidator {
             } else {
                 if (colDiff != 0) return false;
                 if (rowDiff == 1) return true;
-                return rowDiff == 2 && pawn.getBoard_row() == 2;
+                return rowDiff == 2 && pawn.getBoard_row() == 1;
             }
         } else {
             if (isCapture) {
@@ -98,7 +98,7 @@ public class MoveValidator {
             } else {
                 if (colDiff != 0) return false;
                 if (rowDiff == -1) return true;
-                return rowDiff == -2 && pawn.getBoard_row() == 7;
+                return rowDiff == -2 && pawn.getBoard_row() == 6;
             }
         }
     }
