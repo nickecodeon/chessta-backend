@@ -1,7 +1,7 @@
 package org.example.chessta.controller;
 
 import org.example.chessta.dto.FigureDTO;
-import org.example.chessta.model.gameModels.Figure;
+import org.example.chessta.model.Figure;
 import org.example.chessta.service.FigureService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

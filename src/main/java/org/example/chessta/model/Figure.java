@@ -1,14 +1,11 @@
-package org.example.chessta.model.gameModels;
+package org.example.chessta.model;
 
 import jakarta.persistence.*;
-import org.example.chessta.model.figureModels.*;
 
 import java.util.UUID;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-public abstract class Figure {
+public class Figure {
 
     @Id
     @GeneratedValue
@@ -27,21 +24,21 @@ public abstract class Figure {
     @Column(nullable = false)
     private boolean isCaptured;
 
+    @Column(nullable = false)
+    private FigureType type;
+
     // --- Konstruktoren ---
 
     protected Figure() {}
 
     // Konstruktor für neue Figuren
-    public Figure(int board_row, int board_column, boolean isWhite) {
+    public Figure(int board_row, int board_column, boolean isWhite, FigureType type) {
         setBoard_row(board_row);
         setBoard_column(board_column);
         setColor(isWhite);
         isCaptured = false;
+        this.type = type;
     }
-
-    // --- Methoden ---
-
-    public abstract boolean isValidMove(int row, int column, boolean isCapture);
 
     // --- Getter & Setter ---
 
@@ -57,10 +54,6 @@ public abstract class Figure {
             throw new IllegalArgumentException("Column must be between 0 and 7.");
         }
         this.board_column = column;
-    }
-
-    public boolean requiresClearPath() {
-        return this instanceof Bishop || this instanceof Rook || this instanceof Queen;
     }
 
     public void setColor(boolean white) {
@@ -93,5 +86,14 @@ public abstract class Figure {
 
     public boolean isCaptured() {
         return isCaptured;
+    }
+
+    public FigureType getType() {
+        return type;
+    }
+
+    @SuppressWarnings("unused")
+    public void setType(FigureType type) {
+        this.type = type;
     }
 }

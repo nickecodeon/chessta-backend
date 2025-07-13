@@ -1,8 +1,8 @@
 package org.example.chessta.service;
 
-import org.example.chessta.model.gameModels.Figure;
-import org.example.chessta.model.gameModels.Game;
-import org.example.chessta.model.gameModels.Move;
+import org.example.chessta.model.Figure;
+import org.example.chessta.model.Game;
+import org.example.chessta.model.Move;
 import org.example.chessta.repository.MoveRepository;
 import org.springframework.stereotype.Service;
 

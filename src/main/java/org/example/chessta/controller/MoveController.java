@@ -2,7 +2,7 @@ package org.example.chessta.controller;
 
 
 import org.example.chessta.dto.MoveDTO;
-import org.example.chessta.model.gameModels.Move;
+import org.example.chessta.model.Move;
 import org.example.chessta.service.MoveService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

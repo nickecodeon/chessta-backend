@@ -1,6 +1,6 @@
 package org.example.chessta.dto;
 
-import org.example.chessta.model.gameModels.Move;
+import org.example.chessta.model.Move;
 
 public class MoveDTO {
     private int fromRow;

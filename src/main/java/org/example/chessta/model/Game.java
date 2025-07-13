@@ -1,7 +1,6 @@
-package org.example.chessta.model.gameModels;
+package org.example.chessta.model;
 
 import jakarta.persistence.*;
-import org.example.chessta.model.figureModels.*;
 import org.example.chessta.service.FigureService;
 
 import java.util.ArrayList;
@@ -51,18 +50,32 @@ public class Game {
     // --- Methoden ---
 
     public void initializeBoard(FigureService figureService) {
-        List<Figure> figures = new ArrayList<>(List.of(
-                new Rook(0, 0, true), new Knight(0, 1, true), new Bishop(0, 2, true),
-                new Queen(0, 3, true), new King(0, 4, true), new Bishop(0, 5, true),
-                new Knight(0, 6, true), new Rook(0, 7, true),
-                new Rook(7, 0, false), new Knight(7, 1, false), new Bishop(7, 2, false),
-                new Queen(7, 3, false), new King(7, 4, false), new Bishop(7, 5, false),
-                new Knight(7, 6, false), new Rook(7, 7, false)
-        ));
+        List<Figure> figures = new ArrayList<>();
 
+        // White Figures (Row 0)
+        figures.add(new Figure(0, 0, true, FigureType.ROOK));
+        figures.add(new Figure(0, 1, true, FigureType.KNIGHT));
+        figures.add(new Figure(0, 2, true, FigureType.BISHOP));
+        figures.add(new Figure(0, 3, true, FigureType.QUEEN));
+        figures.add(new Figure(0, 4, true, FigureType.KING));
+        figures.add(new Figure(0, 5, true, FigureType.BISHOP));
+        figures.add(new Figure(0, 6, true, FigureType.KNIGHT));
+        figures.add(new Figure(0, 7, true, FigureType.ROOK));
+
+        // Black Figures (Row 7)
+        figures.add(new Figure(7, 0, false, FigureType.ROOK));
+        figures.add(new Figure(7, 1, false, FigureType.KNIGHT));
+        figures.add(new Figure(7, 2, false, FigureType.BISHOP));
+        figures.add(new Figure(7, 3, false, FigureType.QUEEN));
+        figures.add(new Figure(7, 4, false, FigureType.KING));
+        figures.add(new Figure(7, 5, false, FigureType.BISHOP));
+        figures.add(new Figure(7, 6, false, FigureType.KNIGHT));
+        figures.add(new Figure(7, 7, false, FigureType.ROOK));
+
+        // Pawns
         for (int col = 0; col < 8; col++) {
-            figures.add(new Pawn(1, col, true));  // Weiße Bauern in Reihe 1 (zweite Zeile)
-            figures.add(new Pawn(6, col, false)); // Schwarze Bauern in Reihe 6 (vorletzte Zeile)
+            figures.add(new Figure(1, col, true, FigureType.PAWN));
+            figures.add(new Figure(6, col, false, FigureType.PAWN));
         }
 
         List<Figure> savedFigures = figureService.saveFigures(figures);

@@ -1,6 +1,6 @@
 package org.example.chessta.dto;
 
-import org.example.chessta.model.gameModels.Game;
+import org.example.chessta.model.Game;
 
 import java.util.List;
 import java.util.UUID;

@@ -2,8 +2,9 @@ package org.example.chessta.service;
 
 import org.example.chessta.dto.FigureDTO;
 import org.example.chessta.dto.MoveDTO;
+import org.example.chessta.model.Figure;
+import org.example.chessta.model.Game;
 import org.example.chessta.repository.*;
-import org.example.chessta.model.gameModels.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,28 +55,19 @@ public class GameService {
 
     public boolean executeMove(UUID gameId, MoveDTO moveDTO) {
         Game game = loadGame(gameId);
+        MoveValidator moveValidator = new MoveValidator(figureService);
 
         Figure movingFigure = figureService.getFigureAtPosition(game, moveDTO.getFromRow(), moveDTO.getFromCol());
         if (movingFigure == null || movingFigure.isWhite() != game.getCurrentPlayer().isWhite()) {
             return false;
         }
 
+        if (!moveValidator.isValidMove(movingFigure, moveDTO.getToRow(), moveDTO.getToCol(), game)) {
+            return false;
+        }
+
         Figure targetFigure = figureService.getFigureAtPosition(game, moveDTO.getToRow(), moveDTO.getToCol());
         boolean isCapture = targetFigure != null;
-
-        if (isCapture && targetFigure.isWhite() == movingFigure.isWhite()) {
-            return false;
-        }
-
-        if (!movingFigure.isValidMove(moveDTO.getToRow(), moveDTO.getToCol(), isCapture)) {
-            return false;
-        }
-
-        // Prüfen ob zwischen Bishop, Queen oder Rook andere Figuren stehen
-        if (movingFigure.requiresClearPath() &&
-                !figureService.isPathClear(game, moveDTO.getFromRow(), moveDTO.getFromCol(), moveDTO.getToRow(), moveDTO.getToCol())) {
-            return false;
-        }
 
         if (isCapture) {
             figureService.captureFigure(targetFigure);
@@ -84,8 +76,7 @@ public class GameService {
         figureService.moveFigure(movingFigure, moveDTO.getToRow(), moveDTO.getToCol());
 
         int inGameCount = game.getMoveCount();
-
-        moveService.createMove(movingFigure, moveDTO.getToRow(), moveDTO.getToCol(), targetFigure != null, game, inGameCount);
+        moveService.createMove(movingFigure, moveDTO.getToRow(), moveDTO.getToCol(), isCapture, game, inGameCount);
 
         game.setMoveCount(inGameCount + 1);
 
@@ -94,8 +85,6 @@ public class GameService {
                         ? game.getBlackPlayer()
                         : game.getWhitePlayer()
         );
-
-        // neuen spielstand speichern
         gameRepository.save(game);
 
         System.out.println("Move successfully executed.");

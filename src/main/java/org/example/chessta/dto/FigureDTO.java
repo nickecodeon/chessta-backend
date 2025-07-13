@@ -1,6 +1,6 @@
 package org.example.chessta.dto;
 
-import org.example.chessta.model.gameModels.Figure;
+import org.example.chessta.model.Figure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class FigureDTO {
     public static FigureDTO fromEntity(Figure figure) {
         return new FigureDTO(
                 figure.getId(),
-                figure.getClass().getSimpleName(),
+                figure.getType().name(),
                 figure.getBoard_row(),
                 figure.getBoard_column(),
                 figure.isWhite(),

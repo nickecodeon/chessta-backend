@@ -1,4 +1,4 @@
-package org.example.chessta.model.gameModels;
+package org.example.chessta.model;
 
 import jakarta.persistence.*;
 

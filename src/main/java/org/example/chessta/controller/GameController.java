@@ -4,7 +4,7 @@ import org.example.chessta.dto.FigureDTO;
 import org.example.chessta.dto.GameDTO;
 import org.example.chessta.dto.MoveDTO;
 import org.example.chessta.dto.MoveResponseDTO;
-import org.example.chessta.model.gameModels.Game;
+import org.example.chessta.model.Game;
 import org.example.chessta.service.GameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
