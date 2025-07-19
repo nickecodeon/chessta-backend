@@ -29,7 +29,7 @@ public class Figure {
 
     // --- Konstruktoren ---
 
-    protected Figure() {}
+    public Figure() {}
 
     // Konstruktor für neue Figuren
     public Figure(int board_row, int board_column, boolean isWhite, FigureType type) {

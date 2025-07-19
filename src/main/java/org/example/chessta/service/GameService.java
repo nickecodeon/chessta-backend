@@ -4,6 +4,7 @@ import org.example.chessta.dto.FigureDTO;
 import org.example.chessta.dto.MoveDTO;
 import org.example.chessta.model.Figure;
 import org.example.chessta.model.Game;
+import org.example.chessta.model.simulation.SimulatedGame;
 import org.example.chessta.repository.*;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,21 @@ public class GameService {
     private final GameRepository gameRepository;
 
     private final FigureService figureService;
-
     private final MoveService moveService;
+    private final MoveValidator moveValidator;
+    private final CheckService checkService;
+    private final CheckmateService checkmateService;
 
-    public GameService(GameRepository gameRepository, FigureService figureService, MoveService moveService) {
+    public GameService(GameRepository gameRepository, FigureService figureService,
+                       MoveService moveService, MoveValidator moveValidator,
+                       CheckService checkService, CheckmateService checkmateService)
+    {
         this.gameRepository = gameRepository;
         this.figureService = figureService;
         this.moveService = moveService;
+        this.moveValidator = moveValidator;
+        this.checkService = checkService;
+        this.checkmateService = checkmateService;
     }
 
     public Game createNewGame(String whitePlayerName, String blackPlayerName) {
@@ -55,14 +64,25 @@ public class GameService {
 
     public boolean executeMove(UUID gameId, MoveDTO moveDTO) {
         Game game = loadGame(gameId);
-        MoveValidator moveValidator = new MoveValidator(figureService);
+
+        List<Figure> gameFigures = figureService.getFiguresByGame(game);
 
         Figure movingFigure = figureService.getFigureAtPosition(game, moveDTO.getFromRow(), moveDTO.getFromCol());
         if (movingFigure == null || movingFigure.isWhite() != game.getCurrentPlayer().isWhite()) {
+            System.out.println(movingFigure);
             return false;
         }
 
-        if (!moveValidator.isValidMove(movingFigure, moveDTO.getToRow(), moveDTO.getToCol(), game)) {
+        if (!moveValidator.isValidMove(gameFigures, movingFigure, moveDTO.getToRow(), moveDTO.getToCol())) {
+            System.out.println("Not valid move.");
+            return false;
+        }
+
+        SimulatedGame simulatedGame = moveService.simulateMove(game, movingFigure, moveDTO.getToRow(), moveDTO.getToCol());
+        boolean selfInCheck = checkService.isKingInCheck(simulatedGame, movingFigure.isWhite());
+
+        if (selfInCheck) {
+            System.out.println("selfInCheck");
             return false;
         }
 
@@ -85,6 +105,16 @@ public class GameService {
                         ? game.getBlackPlayer()
                         : game.getWhitePlayer()
         );
+
+        SimulatedGame newGameState = new SimulatedGame(figureService.getFiguresByGame(game));
+
+        boolean isCheck = checkService.isKingInCheck(newGameState, game.getCurrentPlayer().isWhite());
+        boolean isCheckmate = checkmateService.isCheckmate(game, game.getCurrentPlayer().isWhite());
+
+        if (isCheckmate) {
+            game.setFinished(true);
+        }
+
         gameRepository.save(game);
 
         System.out.println("Move successfully executed.");

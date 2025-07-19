@@ -2,20 +2,17 @@ package org.example.chessta.service;
 
 import org.example.chessta.model.Figure;
 import org.example.chessta.model.FigureType;
-import org.example.chessta.model.Game;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MoveValidator {
-    private final FigureService figureService;
+    public MoveValidator() {}
 
-    public MoveValidator(FigureService figureService) {
-        this.figureService = figureService;
-    }
+    public boolean isValidMove(List<Figure> gameFigures, Figure figure, int toRow, int toCol) {
 
-    public boolean isValidMove(Figure figure, int toRow, int toCol, Game game) {
-
-        Figure target = figureService.getFigureAtPosition(game, toRow, toCol);
+        Figure target = getFigureAtPosition(gameFigures, toRow, toCol);
         boolean isCapture = target != null;
 
         if (isCapture && target.isWhite() == figure.isWhite()) {
@@ -33,16 +30,40 @@ public class MoveValidator {
 
         if (!basicValid) return false;
 
-        if (requiresClearPath(figure.getType()) &&
-                !figureService.isPathClear(game, figure.getBoard_row(), figure.getBoard_column(), toRow, toCol)) {
-            return false;
+        return !requiresClearPath(figure.getType()) ||
+                isPathClear(gameFigures, figure.getBoard_row(), figure.getBoard_column(), toRow, toCol);
+    }
+
+    public Figure getFigureAtPosition(List<Figure> gameFigures, int row, int col) {
+        for (Figure figure : gameFigures) {
+            if (figure != null && figure.getBoard_row() == row && figure.getBoard_column() == col) {
+                return figure;
+            }
         }
 
-        return true;
+        return null;
     }
 
     private boolean requiresClearPath(FigureType type) {
         return type == FigureType.ROOK || type == FigureType.BISHOP || type == FigureType.QUEEN;
+    }
+
+    public boolean isPathClear(List<Figure> gameFigures, int fromRow, int fromCol, int toRow, int toCol) {
+        int rowStep = Integer.compare(toRow, fromRow);
+        int colStep = Integer.compare(toCol, fromCol);
+
+        int currentRow = fromRow + rowStep;
+        int currentCol = fromCol + colStep;
+
+        while (currentRow != toRow || currentCol != toCol) {
+            if (getFigureAtPosition(gameFigures, currentRow, currentCol) != null) {
+                return false;
+            }
+            currentRow += rowStep;
+            currentCol += colStep;
+        }
+
+        return true;
     }
 
     private boolean validateKingMove(Figure king, int toRow, int toCol) {

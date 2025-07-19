@@ -3,18 +3,23 @@ package org.example.chessta.service;
 import org.example.chessta.model.Figure;
 import org.example.chessta.model.Game;
 import org.example.chessta.model.Move;
+import org.example.chessta.model.simulation.SimulatedGame;
 import org.example.chessta.repository.MoveRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 @Service
 public class MoveService {
     private final MoveRepository moveRepository;
+    private final FigureService figureService;
 
-    public MoveService(MoveRepository moveRepository) {
+    public MoveService(MoveRepository moveRepository, FigureService figureService) {
         this.moveRepository = moveRepository;
+        this.figureService = figureService;
     }
 
     public void createMove(Figure figure, int toRow, int toCol, boolean isCapture, Game game, int inGameCount) {
@@ -33,5 +38,25 @@ public class MoveService {
     public void deleteMovesForGame(UUID gameId) {
         List<Move> moves = moveRepository.findByGameId(gameId);
         moveRepository.deleteAll(moves);
+    }
+
+    public SimulatedGame simulateMove(Game game, Figure originalFigure, int toRow, int toCol) {
+        List<Figure> originalFigures = figureService.getFiguresByGame(game);
+        List<Figure> copiedFigures = originalFigures.stream()
+                .map(figureService::copyFigure)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        SimulatedGame simulatedGame = new SimulatedGame(copiedFigures);
+
+        Figure moving = simulatedGame.getFigureById(originalFigure.getId());
+        Figure target = simulatedGame.getFigureAt(toRow, toCol);
+
+        if (target != null) {
+            simulatedGame.captureFigure(target);
+        }
+
+        simulatedGame.moveFigure(moving, toRow, toCol);
+
+        return simulatedGame;
     }
 }

@@ -40,24 +40,6 @@ public class FigureService {
         return null;
     }
 
-    public boolean isPathClear(Game game, int fromRow, int fromCol, int toRow, int toCol) {
-        int rowStep = Integer.compare(toRow, fromRow);
-        int colStep = Integer.compare(toCol, fromCol);
-
-        int currentRow = fromRow + rowStep;
-        int currentCol = fromCol + colStep;
-
-        while (currentRow != toRow || currentCol != toCol) {
-            if (getFigureAtPosition(game, currentRow, currentCol) != null) {
-                return false;
-            }
-            currentRow += rowStep;
-            currentCol += colStep;
-        }
-
-        return true;
-    }
-
     public void captureFigure(Figure figure) {
         figure.setCaptured(true);
         figureRepository.save(figure);
@@ -75,5 +57,15 @@ public class FigureService {
 
     public void deleteFigureById(UUID figureId) {
         figureRepository.deleteById(figureId);
+    }
+
+    public Figure copyFigure(Figure original) {
+        Figure copy = new Figure();
+        copy.setId(original.getId());
+        copy.setBoard_row(original.getBoard_row());
+        copy.setBoard_column(original.getBoard_column());
+        copy.setColor(original.isWhite());
+        copy.setType(original.getType());
+        return copy;
     }
 }
